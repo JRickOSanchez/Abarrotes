@@ -8,21 +8,106 @@ const port = 3000;
 //MongoDB
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1/ProyectoExpress')
+const { Schema } = mongoose;
+const { Types: { ObjectId } } = mongoose;
 
 mongoose.connection.on('open', _ => {
     console.log("Se ha conectado");
 })
 
-// Define un esquema para tus datos JSON
-const proyectoSchema = new mongoose.Schema({
-  // Define la estructura de tu esquema aquí, por ejemplo:
+// Esquema para Productos
+const productoSchema = new Schema({
   nombre: String,
   descripcion: String,
-  // ... otros campos
+  codigoBarras: String,
+  precioCompra: Number,
+  precioVenta: Number,
+  existencias: Number,
+  proveedor: ObjectId,
+  categoria: ObjectId
 });
 
-// Crea un modelo basado en el esquema
-const Proyecto = mongoose.model('Proyecto', proyectoSchema);
+// Esquema para Categorías
+const categoriaSchema = new Schema({
+  nombre: String
+});
+
+// Esquema para Proveedores
+const proveedorSchema = new Schema({
+  nombre: String,
+  contacto: {
+    telefono: String,
+    correoElectronico: String,
+    direccion: String
+  }
+});
+
+// Esquema para Compras
+const compraSchema = new Schema({
+  proveedor: ObjectId,
+  fechaCompra: Date,
+  productosComprados: [
+    {
+      producto: ObjectId,
+      cantidad: Number,
+      precioCompra: Number,
+      total: Number
+    }
+  ]
+});
+
+// Esquema para Ventas
+const ventaSchema = new Schema({
+  cliente: {
+    nombre: String,
+    direccion: String,
+    telefono: String,
+    correoElectronico: String
+  },
+  fechaVenta: Date,
+  productosVendidos: [
+    {
+      producto: ObjectId,
+      cantidad: Number,
+      precioVenta: Number,
+      total: Number
+    }
+  ]
+});
+
+// Esquema para Usuarios
+const usuarioSchema = new Schema({
+  nombreUsuario: String,
+  contrasena: String,
+  rol: String
+});
+
+// Esquema para Transacciones de Inventario
+const transaccionInventarioSchema = new Schema({
+  tipoTransaccion: String,
+  producto: ObjectId,
+  cantidad: Number,
+  fechaTransaccion: Date
+});
+
+// Modelos basados en los esquemas
+const Producto = mongoose.model('Producto', productoSchema);
+const Categoria = mongoose.model('Categoria', categoriaSchema);
+const Proveedor = mongoose.model('Proveedor', proveedorSchema);
+const Compra = mongoose.model('Compra', compraSchema);
+const Venta = mongoose.model('Venta', ventaSchema);
+const Usuario = mongoose.model('Usuario', usuarioSchema);
+const TransaccionInventario = mongoose.model('TransaccionInventario', transaccionInventarioSchema);
+
+module.exports = {
+  Producto,
+  Categoria,
+  Proveedor,
+  Compra,
+  Venta,
+  Usuario,
+  TransaccionInventario
+};
 //MongoDB
 
 // Middleware para parsear el cuerpo de las solicitudes como JSON
@@ -31,14 +116,41 @@ app.use(bodyParser.json());
 // Ruta para leer y mostrar el contenido de un archivo JSON
 app.get('/api/leer-archivo-json', async (req, res) => {
   try {
-    const jsonData = fs.readFileSync('D:/Materias/2/Abarrotes/Abarrotes2/Abarrotes/Express/Proyecto.json', 'utf-8');
+    const rutaArchivo = 'D:/Materias/2/Abarrotes/Abarrotes2/Abarrotes/ExpressMongoDB/Proyecto.json';
+    const jsonData = fs.readFileSync(rutaArchivo, 'utf-8');
     const parsedData = JSON.parse(jsonData);
 
-    // Guarda los datos en MongoDB usando Mongoose
-    await Proyecto.create(parsedData);
+   // Guarda los datos en MongoDB usando Mongoose
+try {
+  // Convertir los valores a los tipos de datos correctos
+  parsedData.productos.forEach(producto => {
+    producto.precioCompra = Number(producto.precioCompra) || 0;  // Asigna 0 si no es un número válido
+    producto.precioVenta = isNaN(producto.precioVenta) ? 0 : Number(producto.precioVenta);
+    producto.existencias = isNaN(producto.existencias) ? 0 : Number(producto.existencias);
+    producto.proveedor = mongoose.Types.ObjectId.isValid(producto.proveedor) ? new mongoose.Types.ObjectId(producto.proveedor) : null;
+    producto.categoria = mongoose.Types.ObjectId.isValid(producto.categoria) ? new mongoose.Types.ObjectId(producto.categoria) : null;
+    // Verificar y crear instancias de ObjectId solo si el valor es válido
+    if (/^[0-9a-fA-F]{24}$/.test(producto.proveedor)) {
+      producto.proveedor = new mongoose.Types.ObjectId(producto.proveedor);
+    }
 
-    console.log('Datos JSON recibidos y guardados en MongoDB:', parsedData);
-    res.json(parsedData);
+    if (/^[0-9a-fA-F]{24}$/.test(producto.categoria)) {
+      producto.categoria = new mongoose.Types.ObjectId(producto.categoria);
+    }
+  });
+
+  await Producto.create(parsedData.productos.map(producto => {
+    // Excluye el campo _id
+    const { _id, ...productoData } = producto;
+    return productoData;
+  }));
+      // Repite el proceso para otros modelos según sea necesario
+      console.log('Datos JSON recibidos y guardados en MongoDB:', parsedData);
+      res.json(parsedData);
+    } catch (error) {
+      console.error('Error al crear documentos en MongoDB:', error);
+      res.status(500).send('Error interno del servidor');
+    }
   } catch (error) {
     console.error('Error al leer el archivo JSON:', error);
     res.status(500).send('Error interno del servidor');
@@ -54,4 +166,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor Express escuchando en http://localhost:${port}`);
 });
+
 
