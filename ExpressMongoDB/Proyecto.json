@@ -1,0 +1,84 @@
+{
+    "productos": [
+      {
+        "_id": "ObjectId",
+        "nombre": "String",
+        "descripcion": "String",
+        "codigoBarras": "String",
+        "precioCompra": "Number",
+        "precioVenta": "Number",
+        "existencias": "Number",
+        "proveedor": "ObjectId",
+        "categoria": "ObjectId"
+      }
+    ],
+    "categorias": [
+      {
+        "_id": "ObjectId",
+        "nombre": "String"
+      }
+    ],
+    "proveedores": [
+      {
+        "_id": "ObjectId",
+        "nombre": "String",
+        "contacto": {
+          "telefono": "String",
+          "correoElectronico": "String",
+          "direccion": "String"
+        }
+      }
+    ],
+    "compras": [
+      {
+        "_id": "ObjectId",
+        "proveedor": "ObjectId",
+        "fechaCompra": "Date",
+        "productosComprados": [
+          {
+            "producto": "ObjectId",
+            "cantidad": "Number",
+            "precioCompra": "Number",
+            "total": "Number"
+          }
+        ]
+      }
+    ],
+    "ventas": [
+      {
+        "_id": "ObjectId",
+        "cliente": {
+          "nombre": "String",
+          "direccion": "String",
+          "telefono": "String",
+          "correoElectronico": "String"
+        },
+        "fechaVenta": "Date",
+        "productosVendidos": [
+          {
+            "producto": "ObjectId",
+            "cantidad": "Number",
+            "precioVenta": "Number",
+            "total": "Number"
+          }
+        ]
+      }
+    ],
+    "usuarios": [
+      {
+        "_id": "ObjectId",
+        "nombreUsuario": "String",
+        "contrasena": "String",
+        "rol": "String"
+      }
+    ],
+    "transaccionesInventario": [
+      {
+        "_id": "ObjectId",
+        "tipoTransaccion": "String",
+        "producto": "ObjectId",
+        "cantidad": "Number",
+        "fechaTransaccion": "Date"
+      }
+    ]
+  }

@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.get('/api/leer-archivo-json', (req, res) => {
     try {
         // Lee el archivo JSON sincrónicamente (puedes usar fs.readFile para una lectura asíncrona)
-        const jsonData = fs.readFileSync('D:/Materias/1/Proyecto/Express/Proyecto.json', 'utf-8');
+        const jsonData = fs.readFileSync('D:/Materias/2/Abarrotes/Abarrotes2/Abarrotes/Express/Proyecto.json', 'utf-8');
         const parsedData = JSON.parse(jsonData);
 
         // Haz lo que necesites con los datos JSON
