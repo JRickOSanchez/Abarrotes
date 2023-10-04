@@ -410,6 +410,28 @@ app.delete('/api/transacciones-inventario/:id', async (req, res) => {
   }
 });
 
+// Operaciones CRUD para Ventas
+app.post('/api/ventas', async (req, res) => {
+  try {
+    const nuevaVenta = await Venta.create(req.body);
+    res.json(nuevaVenta);
+  } catch (error) {
+    console.error('Error al crear una venta:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Operaciones CRUD para Compras
+app.post('/api/compras', async (req, res) => {
+  try {
+    const nuevaCompra = await Compra.create(req.body);
+    res.json(nuevaCompra);
+  } catch (error) {
+    console.error('Error al crear una compra:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
 // Ruta para leer y mostrar el contenido de un archivo JSON
 app.get('/api/leer-archivo-json', async (req, res) => {
   try {

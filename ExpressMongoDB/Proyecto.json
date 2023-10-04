@@ -1,84 +1,126 @@
 {
-    "productos": [
-      {
-        "_id": "ObjectId",
-        "nombre": "String",
-        "descripcion": "String",
-        "codigoBarras": "String",
-        "precioCompra": "Number",
-        "precioVenta": "Number",
-        "existencias": "Number",
-        "proveedor": "ObjectId",
-        "categoria": "ObjectId"
-      }
-    ],
-    "categorias": [
-      {
-        "_id": "ObjectId",
-        "nombre": "String"
-      }
-    ],
-    "proveedores": [
-      {
-        "_id": "ObjectId",
-        "nombre": "String",
-        "contacto": {
-          "telefono": "String",
-          "correoElectronico": "String",
-          "direccion": "String"
-        }
-      }
-    ],
-    "compras": [
-      {
-        "_id": "ObjectId",
-        "proveedor": "ObjectId",
-        "fechaCompra": "Date",
-        "productosComprados": [
-          {
-            "producto": "ObjectId",
-            "cantidad": "Number",
-            "precioCompra": "Number",
-            "total": "Number"
-          }
-        ]
-      }
-    ],
-    "ventas": [
-      {
-        "_id": "ObjectId",
-        "cliente": {
-          "nombre": "String",
-          "direccion": "String",
-          "telefono": "String",
-          "correoElectronico": "String"
+  "productos": [
+    {
+      "_id": "1",
+      "nombre": "Producto A",
+      "descripcion": "Descripción del Producto A",
+      "codigoBarras": "123456789",
+      "precioCompra": 10.5,
+      "precioVenta": 15.0,
+      "existencias": 100,
+      "proveedor": "Proveedor1Id",
+      "categoria": "Categoria1Id"
+    },
+    {
+      "_id": "2",
+      "nombre": "Producto B",
+      "descripcion": "Descripción del Producto B",
+      "codigoBarras": "987654321",
+      "precioCompra": 8.2,
+      "precioVenta": 12.0,
+      "existencias": 50,
+      "proveedor": "Proveedor2Id",
+      "categoria": "Categoria2Id"
+    }
+
+  ],
+  "categorias": [
+    {
+      "_id": "Categoria1Id",
+      "nombre": "Categoria A"
+    },
+    {
+      "_id": "Categoria2Id",
+      "nombre": "Categoria B"
+    }
+
+  ],
+  "proveedores": [
+    {
+      "_id": "Proveedor1Id",
+      "nombre": "Proveedor A",
+      "contacto": "Contacto A",
+      "telefono": "123456789",
+      "correoElectronico": "proveedora@ejemplo.com",
+      "direccion": "Dirección del Proveedor A"
+    },
+    {
+      "_id": "Proveedor2Id",
+      "nombre": "Proveedor B",
+      "contacto": "Contacto B",
+      "telefono": "987654321",
+      "correoElectronico": "proveedorb@ejemplo.com",
+      "direccion": "Dirección del Proveedor B"
+    }
+
+  ],
+  "compras": [
+    {
+      "_id": "Compra1Id",
+      "proveedor": "Proveedor1Id",
+      "fechaCompra": "2023-10-04",
+      "productosComprados": [
+        {
+          "producto": "1",
+          "cantidad": 5,
+          "precioCompra": 10.5,
+          "total": 52.5
         },
-        "fechaVenta": "Date",
-        "productosVendidos": [
-          {
-            "producto": "ObjectId",
-            "cantidad": "Number",
-            "precioVenta": "Number",
-            "total": "Number"
-          }
-        ]
-      }
-    ],
-    "usuarios": [
-      {
-        "_id": "ObjectId",
-        "nombreUsuario": "String",
-        "contrasena": "String",
-        "rol": "String"
-      }
-    ],
-    "transaccionesInventario": [
-      {
-        "_id": "ObjectId",
-        "tipoTransaccion": "String",
-        "producto": "ObjectId",
-        "cantidad": "Number",
-        "fechaTransaccion": "Date"
-      }
-    ]
-  }
+        {
+          "producto": "2",
+          "cantidad": 3,
+          "precioCompra": 8.2,
+          "total": 24.6
+        }
+      ]
+    }
+
+  ],
+  "ventas": [
+    {
+      "_id": "Venta1Id",
+      "cliente": {
+        "nombre": "Cliente A",
+        "direccion": "Dirección del Cliente A",
+        "telefono": "111222333",
+        "correoElectronico": "clienteA@ejemplo.com"
+      },
+      "fechaVenta": "2023-10-05",
+      "productosVendidos": [
+        {
+          "producto": "1",
+          "cantidad": 2,
+          "precioVenta": 15.0,
+          "total": 30.0
+        }
+
+      ]
+    }
+
+  ],
+  "usuarios": [
+    {
+      "_id": "Usuario1Id",
+      "nombreUsuario": "usuarioA",
+      "contrasena": "contrasenaA",
+      "rol": "admin"
+    },
+    {
+      "_id": "Usuario2Id",
+      "nombreUsuario": "usuarioB",
+      "contrasena": "contrasenaB",
+      "rol": "empleado"
+    }
+ 
+  ],
+  "transaccionesInventario": [
+    {
+      "_id": "Transaccion1Id",
+      "tipoTransaccion": "entrada",
+      "producto": "1",
+      "cantidad": 10,
+      "fechaTransaccion": "2023-10-06"
+    }
+
+  ]
+}
