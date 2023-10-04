@@ -419,11 +419,24 @@ app.get('/api/leer-archivo-json', async (req, res) => {
 try {
   // Convertir los valores a los tipos de datos correctos
   parsedData.productos.forEach(producto => {
+  parsedData.transaccionesInventario.forEach(transaccion => {
+
+  // Eliminamos el campo _id para que MongoDB genere uno automáticamente
+  delete transaccion._id;
+  
+    transaccion.producto = mongoose.Types.ObjectId.isValid(transaccion.producto)? new mongoose.Types.ObjectId(transaccion.producto): null;
+    transaccion.cantidad = isNaN(transaccion.cantidad) ? 0 : Number(transaccion.cantidad);
+        transaccion.fechaTransaccion = new Date(transaccion.fechaTransaccion);
+        if (isNaN(transaccion.fechaTransaccion.getTime())) {
+          // Si la conversión falla, establecemos la fecha actual
+          transaccion.fechaTransaccion = new Date();
+        }
     producto.precioCompra = Number(producto.precioCompra) || 0;  // Asigna 0 si no es un número válido
     producto.precioVenta = isNaN(producto.precioVenta) ? 0 : Number(producto.precioVenta);
     producto.existencias = isNaN(producto.existencias) ? 0 : Number(producto.existencias);
     producto.proveedor = mongoose.Types.ObjectId.isValid(producto.proveedor) ? new mongoose.Types.ObjectId(producto.proveedor) : null;
     producto.categoria = mongoose.Types.ObjectId.isValid(producto.categoria) ? new mongoose.Types.ObjectId(producto.categoria) : null;
+  });
     // Verificar y crear instancias de ObjectId solo si el valor es válido
     if (/^[0-9a-fA-F]{24}$/.test(producto.proveedor)) {
       producto.proveedor = new mongoose.Types.ObjectId(producto.proveedor);
@@ -434,12 +447,27 @@ try {
     }
   });
 
-  await Producto.create(parsedData.productos.map(producto => {
-    // Excluye el campo _id
-    const { _id, ...productoData } = producto;
-    return productoData;
-  }));
-      // Repite el proceso para otros modelos según sea necesario
+// Ahora, actualizaremos las diferentes tablas en la base de datos
+await Promise.all([
+        Producto.create(parsedData.productos.map(producto => {
+          const { _id, ...productoData } = producto;
+          return productoData;
+        })),
+        Categoria.create(parsedData.categorias.map(categoria => {
+          const { _id, ...categoriaData } = categoria;
+          return categoriaData;
+        })),
+        Proveedor.create(parsedData.proveedores.map(proveedor => {
+          const { _id, ...proveedorData } = proveedor;
+          return proveedorData;
+        })),
+        Usuario.create(parsedData.usuarios.map(usuario => {
+          const { _id, ...usuarioData } = usuario;
+          return usuarioData;
+        })),
+        TransaccionInventario.create(parsedData.transaccionesInventario)
+      ]);
+
       console.log('Datos JSON recibidos y guardados en MongoDB:', parsedData);
       res.json(parsedData);
     } catch (error) {
