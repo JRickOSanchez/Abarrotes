@@ -172,6 +172,242 @@ app.delete('/api/productos/:id', async (req, res) => {
   }
 });
 
+// Operaciones CRUD para el modelo Categorias
+// Registrar una nueva categoría
+app.post('/api/categorias', async (req, res) => {
+  try {
+    const nuevaCategoria = await Categoria.create(req.body);
+    res.json(nuevaCategoria);
+  } catch (error) {
+    console.error('Error al crear una categoría:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener todas las categorías
+app.get('/api/categorias', async (req, res) => {
+  try {
+    const categorias = await Categoria.find();
+    res.json(categorias);
+  } catch (error) {
+    console.error('Error al obtener categorías:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener una categoría por ID
+app.get('/api/categorias/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const categoria = await Categoria.findById(id);
+    res.json(categoria);
+  } catch (error) {
+    console.error('Error al obtener una categoría por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Actualizar una categoría por ID
+app.put('/api/categorias/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const categoriaActualizada = await Categoria.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(categoriaActualizada);
+  } catch (error) {
+    console.error('Error al actualizar una categoría por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Borrar una categoría por ID
+app.delete('/api/categorias/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Categoria.findByIdAndDelete(id);
+    res.send('Categoría eliminada correctamente');
+  } catch (error) {
+    console.error('Error al borrar una categoría por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Operaciones CRUD para el modelo Proveedores
+// Registrar un nuevo proveedor
+app.post('/api/proveedores', async (req, res) => {
+  try {
+    const nuevoProveedor = await Proveedor.create(req.body);
+    res.json(nuevoProveedor);
+  } catch (error) {
+    console.error('Error al crear un proveedor:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener todos los proveedores
+app.get('/api/proveedores', async (req, res) => {
+  try {
+    const proveedores = await Proveedor.find();
+    res.json(proveedores);
+  } catch (error) {
+    console.error('Error al obtener proveedores:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener un proveedor por ID
+app.get('/api/proveedores/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const proveedor = await Proveedor.findById(id);
+    res.json(proveedor);
+  } catch (error) {
+    console.error('Error al obtener un proveedor por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Actualizar un proveedor por ID
+app.put('/api/proveedores/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const proveedorActualizado = await Proveedor.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(proveedorActualizado);
+  } catch (error) {
+    console.error('Error al actualizar un proveedor por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Borrar un proveedor por ID
+app.delete('/api/proveedores/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Proveedor.findByIdAndDelete(id);
+    res.send('Proveedor eliminado correctamente');
+  } catch (error) {
+    console.error('Error al borrar un proveedor por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Operaciones CRUD para el modelo Usuarios
+// Registrar un nuevo usuario
+app.post('/api/usuarios', async (req, res) => {
+  try {
+    const nuevoUsuario = await Usuario.create(req.body);
+    res.json(nuevoUsuario);
+  } catch (error) {
+    console.error('Error al crear un usuario:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener todos los usuarios
+app.get('/api/usuarios', async (req, res) => {
+  try {
+    const usuarios = await Usuario.find();
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener un usuario por ID
+app.get('/api/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const usuario = await Usuario.findById(id);
+    res.json(usuario);
+  } catch (error) {
+    console.error('Error al obtener un usuario por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Actualizar un usuario por ID
+app.put('/api/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(usuarioActualizado);
+  } catch (error) {
+    console.error('Error al actualizar un usuario por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Borrar un usuario por ID
+app.delete('/api/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Usuario.findByIdAndDelete(id);
+    res.send('Usuario eliminado correctamente');
+  } catch (error) {
+    console.error('Error al borrar un usuario por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Operaciones CRUD para el modelo Transacciones de Inventario
+// Registrar una nueva transacción de inventario
+app.post('/api/transacciones-inventario', async (req, res) => {
+  try {
+    const nuevaTransaccion = await TransaccionInventario.create(req.body);
+    res.json(nuevaTransaccion);
+  } catch (error) {
+    console.error('Error al crear una transacción de inventario:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener todas las transacciones de inventario
+app.get('/api/transacciones-inventario', async (req, res) => {
+  try {
+    const transacciones = await TransaccionInventario.find();
+    res.json(transacciones);
+  } catch (error) {
+    console.error('Error al obtener transacciones de inventario:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener una transacción de inventario por ID
+app.get('/api/transacciones-inventario/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const transaccion = await TransaccionInventario.findById(id);
+    res.json(transaccion);
+  } catch (error) {
+    console.error('Error al obtener una transacción de inventario por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Actualizar una transacción de inventario por ID
+app.put('/api/transacciones-inventario/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const transaccionActualizada = await TransaccionInventario.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(transaccionActualizada);
+  } catch (error) {
+    console.error('Error al actualizar una transacción de inventario por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Borrar una transacción de inventario por ID
+app.delete('/api/transacciones-inventario/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await TransaccionInventario.findByIdAndDelete(id);
+    res.send('Transacción de inventario eliminada correctamente');
+  } catch (error) {
+    console.error('Error al borrar una transacción de inventario por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
 // Ruta para leer y mostrar el contenido de un archivo JSON
 app.get('/api/leer-archivo-json', async (req, res) => {
   try {
