@@ -20,6 +20,14 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+app.route('/api/productos')
+  .post(async (req, res) => {
+    // ... (resto del código)
+  })
+  .get(async (req, res) => {
+    // ... (resto del código)
+  });
+
 // Rutas de ejemplo
 app.get('/test', (req, res) => {
   res.status(200).json({ message: 'OK' });
