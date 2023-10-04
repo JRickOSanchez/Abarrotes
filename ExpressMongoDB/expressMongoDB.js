@@ -488,6 +488,6 @@ app.get('/', (req, res) => {
 // Inicia el servidor en el puerto especificado
 app.listen(port, () => {
   console.log(`Servidor Express escuchando en http://localhost:${port}`);
-});
+  });
 
 
