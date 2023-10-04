@@ -113,6 +113,65 @@ module.exports = {
 // Middleware para parsear el cuerpo de las solicitudes como JSON
 app.use(bodyParser.json());
 
+// Operaciones CRUD para el modelo Producto
+// Registrar un nuevo producto
+app.post('/api/productos', async (req, res) => {
+  try {
+    const nuevoProducto = await Producto.create(req.body);
+    res.json(nuevoProducto);
+  } catch (error) {
+    console.error('Error al crear un producto:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener todos los productos
+app.get('/api/productos', async (req, res) => {
+  try {
+    const productos = await Producto.find();
+    res.json(productos);
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Obtener un producto por ID
+app.get('/api/productos/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const producto = await Producto.findById(id);
+    res.json(producto);
+  } catch (error) {
+    console.error('Error al obtener un producto por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Actualizar un producto por ID
+app.put('/api/productos/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const productoActualizado = await Producto.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(productoActualizado);
+  } catch (error) {
+    console.error('Error al actualizar un producto por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+// Borrar un producto por ID
+app.delete('/api/productos/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Producto.findByIdAndDelete(id);
+    res.send('Producto eliminado correctamente');
+  } catch (error) {
+    console.error('Error al borrar un producto por ID:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
 // Ruta para leer y mostrar el contenido de un archivo JSON
 app.get('/api/leer-archivo-json', async (req, res) => {
   try {
