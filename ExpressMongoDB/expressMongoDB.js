@@ -1,15 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+
 
 const app = express();
 const port = 3000;
 
 //MongoDB
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1/ProyectoExpress')
+mongoose.connect('mongodb://127.0.0.1/ProyectoExpress2')
 const { Schema } = mongoose;
 const { Types: { ObjectId } } = mongoose;
 
@@ -25,8 +24,8 @@ const productoSchema = new Schema({
   precioCompra: Number,
   precioVenta: Number,
   existencias: Number,
-  proveedor: ObjectId,
-  categoria: ObjectId
+  proveedor: { type: mongoose.Schema.Types.ObjectId, ref: 'Proveedor' },
+  categoria: { type: mongoose.Schema.Types.ObjectId, ref: 'Categoria' },
 });
 
 // Esquema para Categorías
@@ -119,8 +118,8 @@ app.use(bodyParser.json());
 // Registrar un nuevo producto
 app.post('/api/productos', async (req, res) => {
   try {
-    const nuevoProducto = await Producto.create(req.body);
-    res.json(nuevoProducto);
+    const productos = await Producto.create(req.body);
+    res.json(productos);
   } catch (error) {
     console.error('Error al crear un producto:', error);
     res.status(500).send('Error interno del servidor');
@@ -441,35 +440,46 @@ app.get('/api/leer-archivo-json', async (req, res) => {
 
    // Guarda los datos en MongoDB usando Mongoose
 try {
-  // Convertir los valores a los tipos de datos correctos
-  parsedData.productos.forEach(producto => {
   parsedData.transaccionesInventario.forEach(transaccion => {
-
-  // Eliminamos el campo _id para que MongoDB genere uno automáticamente
-  delete transaccion._id;
+    // Eliminamos el campo _id para que MongoDB genere uno automáticamente
+    delete transaccion._id;
   
-    transaccion.producto = mongoose.Types.ObjectId.isValid(transaccion.producto)? new mongoose.Types.ObjectId(transaccion.producto): null;
+    // Convertir el ID del producto a un ObjectId
+    transaccion.producto = mongoose.Types.ObjectId.isValid(transaccion.producto) ? new mongoose.Types.ObjectId(transaccion.producto) : null;
+  
+    // Convertir la cantidad a un número válido
     transaccion.cantidad = isNaN(transaccion.cantidad) ? 0 : Number(transaccion.cantidad);
-        transaccion.fechaTransaccion = new Date(transaccion.fechaTransaccion);
-        if (isNaN(transaccion.fechaTransaccion.getTime())) {
-          // Si la conversión falla, establecemos la fecha actual
-          transaccion.fechaTransaccion = new Date();
-        }
-    producto.precioCompra = Number(producto.precioCompra) || 0;  // Asigna 0 si no es un número válido
-    producto.precioVenta = isNaN(producto.precioVenta) ? 0 : Number(producto.precioVenta);
-    producto.existencias = isNaN(producto.existencias) ? 0 : Number(producto.existencias);
+  
+    // Convertir la fecha de la transacción a un objeto Date
+    transaccion.fechaTransaccion = new Date(transaccion.fechaTransaccion);
+    if (isNaN(transaccion.fechaTransaccion.getTime())) {
+        transaccion.fechaTransaccion = new Date();
+    }
+  });
+  
+  parsedData.productos.forEach(producto => {
+    // Eliminamos el campo _id para que MongoDB genere uno automáticamente
+    delete producto._id;
+  
+    // Convertir los IDs a ObjectId si son válidos
     producto.proveedor = mongoose.Types.ObjectId.isValid(producto.proveedor) ? new mongoose.Types.ObjectId(producto.proveedor) : null;
     producto.categoria = mongoose.Types.ObjectId.isValid(producto.categoria) ? new mongoose.Types.ObjectId(producto.categoria) : null;
-  });
+  
+    // Convertir los precios, existencias, etc. a números válidos
+    producto.precioCompra = Number(producto.precioCompra) || 0;
+    producto.precioVenta = isNaN(producto.precioVenta) ? 0 : Number(producto.precioVenta);
+    producto.existencias = isNaN(producto.existencias) ? 0 : Number(producto.existencias);
+
     // Verificar y crear instancias de ObjectId solo si el valor es válido
     if (/^[0-9a-fA-F]{24}$/.test(producto.proveedor)) {
-      producto.proveedor = new mongoose.Types.ObjectId(producto.proveedor);
+        producto.proveedor = new mongoose.Types.ObjectId(producto.proveedor);
     }
 
     if (/^[0-9a-fA-F]{24}$/.test(producto.categoria)) {
-      producto.categoria = new mongoose.Types.ObjectId(producto.categoria);
+        producto.categoria = new mongoose.Types.ObjectId(producto.categoria);
     }
   });
+
 
 // Ahora, actualizaremos las diferentes tablas en la base de datos
 await Promise.all([
