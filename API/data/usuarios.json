@@ -16,5 +16,10 @@
     "nombreUsuario": "usuario3",
     "contrasena": "contrasena3",
     "rol": "cliente"
+  },
+  {
+    "id": "1",
+    "username": "usuario1",
+    "password": "contrasena1"
   }
 ]
