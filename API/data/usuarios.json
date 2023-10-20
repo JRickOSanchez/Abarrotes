@@ -1,25 +1,26 @@
 [
   {
     "id": "1",
-    "nombreUsuario": "usuario1",
-    "contrasena": "contrasena1",
+    "username": "usuario1",
+    "password": "contrasena1",
     "rol": "admin"
   },
   {
     "id": "2",
-    "nombreUsuario": "usuario2",
-    "contrasena": "contrasena2",
+    "username": "usuario2",
+    "password": "contrasena2",
     "rol": "usuario"
   },
   {
     "id": "3",
-    "nombreUsuario": "usuario3",
-    "contrasena": "contrasena3",
+    "username": "usuario3",
+    "password": "contrasena3",
     "rol": "cliente"
   },
   {
-    "id": "1",
-    "username": "usuario1",
-    "password": "contrasena1"
+    "id": "4",
+    "username": "usuario4",
+    "password": "contrasena4",
+    "rol": "usuario"
   }
 ]

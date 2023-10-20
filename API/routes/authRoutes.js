@@ -16,9 +16,9 @@ const users = JSON.parse(fs.readFileSync(filePath7, 'utf8'));
 
 // Ruta para autenticar y obtener un token JWT
 router.post('/login', (req, res) => {
-  const { username, contrasena } = req.body;
+  const { username, password } = req.body;
 
-  const user = users.find((u) => u.username === username && u.contrasena === contrasena);
+  const user = users.find((u) => u.username === username && u.password === password);
 
   if (!user) {
     return res.status(401).json({ error: 'Credenciales inválidas' });

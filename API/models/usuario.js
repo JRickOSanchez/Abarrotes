@@ -1,10 +1,10 @@
 // models/usuario.js
 // Módulo para Usuarios
 class Usuario {
-    constructor(id, nombreUsuario, contrasena, rol) {
+    constructor(id, username, password, rol) {
       this.id = id;
-      this.nombreUsuario = nombreUsuario;
-      this.contrasena = contrasena;
+      this.username = username;
+      this.password = password;
       this.rol = rol;
     }
   }

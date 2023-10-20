@@ -91,8 +91,13 @@ exports.addProduct = (req, res) => {
   } = req.body;
 
   // Validar los datos del producto
-  if (!nombre || !codigoBarras || !precioCompra || !precioVenta || !existencias) {
-    return res.status(400).json({ error: 'Todos los campos del producto son obligatorios' });
+  const requiredProperties = ['nombre', 'codigoBarras', 'precioCompra', 'precioVenta', 'existencias'];
+
+  if (
+    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
+    Object.keys(req.body).length !== requiredProperties.length
+  ) {
+    return res.status(400).json({ error: 'Estructura incorrecta' });
   }
 
   const newProduct = {
@@ -241,10 +246,20 @@ exports.getProviderById = (req, res) => {
   res.json(provider);
 };
 
-exports.addProvider = async (req, res) => {
+ //Funcion para añadir un proovedor
+ exports.addProvider = async (req, res) => {
   const { nombre, contacto } = req.body;
 
   // Validar los datos del proveedor
+  const requiredProperties = ['nombre'];
+
+  if (
+    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
+    Object.keys(req.body).length !== requiredProperties.length
+  ) {
+    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
+  }
+
   if (!nombre) {
     return res.status(400).json({ error: 'El nombre del proveedor es obligatorio' });
   }
@@ -335,7 +350,7 @@ function encontrarCategoriaPorId(id, categorias) {
   return categorias.find(categoria => categoria.id === id);
 }
 
-exports.getCategoryById = (req, res) => {
+  exports.getCategoryById = (req, res) => {
   const categoryId = req.params.id;
 
   try {
@@ -357,11 +372,20 @@ exports.getCategoryById = (req, res) => {
   }
 };
 
-// Función para agregar una nueva categoría
-exports.addCategory = (req, res) => {
+  // Función para agregar una nueva categoría
+  exports.addCategory = (req, res) => {
   const { nombre } = req.body;
 
   // Validar los datos de la categoría
+  const requiredProperties = ['nombre'];
+
+  if (
+    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
+    Object.keys(req.body).length !== requiredProperties.length
+  ) {
+    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
+  }
+
   if (!nombre) {
     return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
   }
@@ -373,13 +397,13 @@ exports.addCategory = (req, res) => {
     const categoriasData = fs.readFileSync(filePath3, 'utf-8');
     let categorias = JSON.parse(categoriasData);
 
-    // Verificar si categorias es un array, si no, inicializar como array vacío
+    // Verificar si categorías es un array, si no, inicializar como array vacío
     if (!Array.isArray(categorias)) {
       categorias = [];
     }
 
     // Agregar la nueva categoría al array de categorías
-    categorias.push(newCategory);
+    categorías.push(newCategory);
 
     // Escribir el array actualizado de categorías de nuevo al archivo
     fs.writeFileSync(filePath3, JSON.stringify(categorias, null, 2));
@@ -554,27 +578,6 @@ function deleteDataById(filePath, id) {
   }
 }
 
-exports.addVenta = (req, res) => {
-  const { cliente, fechaVenta, productosVendidos } = req.body;
-
-  if (!cliente || !fechaVenta || !productosVendidos) {
-    return res.status(400).json({ error: 'Datos incompletos para la venta' });
-  }
-
-  const newVenta = new Venta(generateUniqueId(), cliente, fechaVenta, productosVendidos);
-
-  console.log('Ruta de compra.json:', filePath4);
-  console.log('Ruta de venta.json:', filePath5);
-
-  try {
-    addData(filePath5, newVenta);
-    res.status(201).json(newVenta);
-  } catch (error) {
-    console.error('Error al agregar venta:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-
 // Controladores para Ventas
 exports.getAllVentas = (req, res) => {
   try {
@@ -608,6 +611,16 @@ exports.getVentaById = (req, res) => {
 
 exports.addVenta = (req, res) => {
   const { cliente, fechaVenta, productosVendidos } = req.body;
+
+  // Validar los datos de la venta
+  const requiredProperties = ['cliente', 'fechaVenta', 'productosVendidos'];
+
+  if (
+    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
+    Object.keys(req.body).length !== requiredProperties.length
+  ) {
+    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
+  }
 
   if (!cliente || !fechaVenta || !productosVendidos) {
     return res.status(400).json({ error: 'Datos incompletos para la venta' });
@@ -682,6 +695,16 @@ exports.getCompraById = (req, res) => {
 
 exports.addCompra = (req, res) => {
   const { proveedor, fechaCompra, productosComprados } = req.body;
+
+  // Validar los datos de la compra
+  const requiredProperties = ['proveedor', 'fechaCompra', 'productosComprados'];
+
+  if (
+    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
+    Object.keys(req.body).length !== requiredProperties.length
+  ) {
+    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
+  }
 
   if (!proveedor || !fechaCompra || !productosComprados) {
     return res.status(400).json({ error: 'Datos incompletos para la compra' });
@@ -835,11 +858,7 @@ exports.getUsuarioById = (req, res) => {
   const usuarioId = parseInt(req.params.id);
 
   try {
-    // Leer datos actuales de usuarios desde el archivo
-    const usuariosData = fs.readFileSync(filePath7, 'utf-8');
-    const usuarios = JSON.parse(usuariosData);
-
-    // Lógica para buscar el usuario por ID
+    // Lógica para buscar el usuario por ID en el array cargado
     const foundUsuario = usuarios.find(usuario => usuario.id === usuarioId.toString());
 
     if (!foundUsuario) {
@@ -857,20 +876,34 @@ exports.addUsuario = (req, res) => {
   const { nombreUsuario, contrasena, rol } = req.body;
 
   // Validar los datos del usuario
+  const requiredProperties = ['nombreUsuario', 'contrasena', 'rol'];
+
+  if (
+    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
+    Object.keys(req.body).length !== requiredProperties.length
+  ) {
+    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
+  }
+
   if (!nombreUsuario || !contrasena || !rol) {
     return res.status(400).json({ error: 'Datos incompletos para el usuario' });
   }
 
   const nuevoUsuario = new Usuario(generateUniqueId(), nombreUsuario, contrasena, rol);
 
-  // Agregar el nuevo usuario al array
-  usuarios.push(nuevoUsuario);
+  try {
+    // Agregar el nuevo usuario al array
+    usuarios.push(nuevoUsuario);
 
-  // Guardar el array actualizado en el archivo
-  fs.writeFileSync(filePath7, JSON.stringify(usuarios, null, 2));
+    // Guardar el array actualizado en el archivo
+    fs.writeFileSync(filePath7, JSON.stringify(usuarios, null, 2));
 
-  // Devolver el usuario agregado
-  res.status(201).json(nuevoUsuario);
+    // Devolver el usuario agregado
+    res.status(201).json(nuevoUsuario);
+  } catch (error) {
+    console.error('Error al agregar usuario:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
 exports.updateUsuario = (req, res) => {
