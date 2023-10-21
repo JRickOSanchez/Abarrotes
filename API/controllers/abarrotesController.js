@@ -291,9 +291,10 @@ exports.addProvider = async (req, res) => {
     return;
   } catch (error) {
     console.error('Error al agregar el proveedor:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno de los servidor' });
   }
 };
+
 
 exports.updateProvider = async (req, res) => {
   const providerId = req.params.id;
