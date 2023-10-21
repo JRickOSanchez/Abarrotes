@@ -945,36 +945,43 @@ exports.getUsuarioById = (req, res) => {
   }
 };
 
+// Función para agregar un nuevo usuario
 exports.addUsuario = (req, res) => {
-  const { nombreUsuario, contrasena, rol } = req.body;
+  const { username, password, rol } = req.body;
 
   // Validar los datos del usuario
-  const requiredProperties = ['nombreUsuario', 'contrasena', 'rol'];
+  const requiredProperties = ['username', 'password', 'rol'];
 
-  if (
-    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
-    Object.keys(req.body).length !== requiredProperties.length
-  ) {
+  // Excluir 'id' de la validación
+  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
+
+  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
     return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
   }
 
-  if (!nombreUsuario || !contrasena || !rol) {
+  if (!username || !password || !rol) {
     return res.status(400).json({ error: 'Datos incompletos para el usuario' });
   }
 
-  const nuevoUsuario = new Usuario(generateUniqueId(), nombreUsuario, contrasena, rol);
+  // Generar un ID único
+  const uniqueId = generateUniqueId();
+
+  const nuevoUsuario = {
+    id: uniqueId,
+    username,
+    password,
+    rol,
+  };
 
   try {
-    // Agregar el nuevo usuario al array
-    usuarios.push(nuevoUsuario);
-
-    // Guardar el array actualizado en el archivo
-    fs.writeFileSync(filePath7, JSON.stringify(usuarios, null, 2));
+    //Función para guardar el usuario
+    addData(filePath7, nuevoUsuario);
 
     // Devolver el usuario agregado
     res.status(201).json(nuevoUsuario);
+    return;
   } catch (error) {
-    console.error('Error al agregar usuario:', error);
+    console.error('Error al agregar el usuario:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
