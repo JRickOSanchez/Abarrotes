@@ -829,24 +829,46 @@ exports.getTransaccionById = (req, res) => {
   }
 };
 
+// Función para agregar una nueva transacción
 exports.addTransaccion = (req, res) => {
   const { tipoTransaccion, producto, cantidad, fechaTransaccion } = req.body;
 
   // Validar los datos de la transacción
+  const requiredProperties = ['tipoTransaccion', 'producto', 'cantidad', 'fechaTransaccion'];
+
+  // Excluir 'id' de la validación
+  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
+
+  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
+    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
+  }
+
   if (!tipoTransaccion || !producto || !cantidad || !fechaTransaccion) {
     return res.status(400).json({ error: 'Datos incompletos para la transacción' });
   }
 
-  const nuevaTransaccion = new TransaccionInventario(generateUniqueId(), tipoTransaccion, producto, cantidad, fechaTransaccion);
+  // Generar un ID único
+  const uniqueId = generateUniqueId();
 
-  // Agregar la nueva transacción al array
-  transacciones.push(nuevaTransaccion);
+  const nuevaTransaccion = {
+    id: uniqueId,
+    tipoTransaccion,
+    producto,
+    cantidad,
+    fechaTransaccion,
+  };
 
-  // Guardar el array actualizado en el archivo
-  fs.writeFileSync(filePath6, JSON.stringify(transacciones, null, 2));
-
-  // Devolver la transacción agregada
-  res.status(201).json(nuevaTransaccion);
+  try {
+    // Llamada a tu función para guardar la transaccion
+    addData(filePath6, nuevaTransaccion);
+  
+    // Devolver la transacción agregada
+    res.status(201).json(nuevaTransaccion);
+    return;
+  } catch (error) {
+    console.error('Error al agregar la transacción:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
 exports.updateTransaccion = (req, res) => {
