@@ -20,5 +20,17 @@
         "precioUnitario": 12
       }
     ]
+  },
+  {
+    "id": "2",
+    "proveedor": "ProveedorABCD",
+    "fechaCompra": "2023-10-13",
+    "productosComprados": [
+      {
+        "nombre": "Producto2",
+        "cantidad": 20,
+        "precioUnitario": 10.5
+      }
+    ]
   }
 ]

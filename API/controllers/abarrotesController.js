@@ -730,16 +730,17 @@ exports.getCompraById = (req, res) => {
   }
 };
 
+// Función para agregar una nueva compra
 exports.addCompra = (req, res) => {
   const { proveedor, fechaCompra, productosComprados } = req.body;
 
   // Validar los datos de la compra
   const requiredProperties = ['proveedor', 'fechaCompra', 'productosComprados'];
 
-  if (
-    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
-    Object.keys(req.body).length !== requiredProperties.length
-  ) {
+  // Excluir 'id' de la validación
+  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
+
+  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
     return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
   }
 
@@ -747,12 +748,25 @@ exports.addCompra = (req, res) => {
     return res.status(400).json({ error: 'Datos incompletos para la compra' });
   }
 
-  const newCompra = new Compra(generateUniqueId(), proveedor, fechaCompra, productosComprados);
+  // Generar un ID único
+  const uniqueId = generateUniqueId();
+
+  const newCompra = {
+    id: uniqueId,
+    proveedor,
+    fechaCompra,
+    productosComprados,
+  };
 
   try {
+    // Llamada a tu función para guardar la compra 
     addData(filePath4, newCompra);
+  
+    // Responder con la nueva compra añadida
     res.status(201).json(newCompra);
+    return;
   } catch (error) {
+    console.error('Error al agregar la compra:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
