@@ -91,17 +91,22 @@ exports.addProduct = (req, res) => {
   } = req.body;
 
   // Validar los datos del producto
-  const requiredProperties = ['nombre', 'codigoBarras', 'precioCompra', 'precioVenta', 'existencias'];
+  const requiredProperties = ['nombre', 'codigoBarras', 'precioCompra', 'precioVenta', 'existencias', 'proveedor', 'categoria', 'descripcion'];
 
-  if (
-    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
-    Object.keys(req.body).length !== requiredProperties.length
-  ) {
+  // Excluir 'id' de la validación
+  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
+
+  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
+    console.log('Propiedades faltantes:', requiredProperties.filter(prop => !bodyProperties.includes(prop)));
+    console.log('Propiedades adicionales:', bodyProperties.filter(prop => !requiredProperties.includes(prop)));
     return res.status(400).json({ error: 'Estructura incorrecta' });
   }
 
+  // Generar un ID único
+  const uniqueId = generateUniqueId();
+
   const newProduct = {
-    id: generateUniqueId(),
+    id: uniqueId,
     nombre,
     descripcion,
     codigoBarras,
@@ -114,13 +119,17 @@ exports.addProduct = (req, res) => {
 
   try {
     const productosData = fs.readFileSync(filePath, 'utf-8');
-    const productos = JSON.parse(productosData);
+    console.log('Contenido del archivo antes de agregar:', productosData);
 
+    const productos = JSON.parse(productosData);
     productos.push(newProduct);
 
     fs.writeFileSync(filePath, JSON.stringify(productos, null, 2));
 
+    console.log('Contenido del archivo después de escribir:', fs.readFileSync(filePath, 'utf-8'));
+
     res.status(201).json(newProduct);
+    return;
   } catch (error) {
     console.error('Error al agregar el producto:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -246,17 +255,17 @@ exports.getProviderById = (req, res) => {
   res.json(provider);
 };
 
- //Funcion para añadir un proovedor
- exports.addProvider = async (req, res) => {
+ // Funcion para añadir un proveedor
+exports.addProvider = async (req, res) => {
   const { nombre, contacto } = req.body;
 
   // Validar los datos del proveedor
   const requiredProperties = ['nombre'];
 
-  if (
-    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
-    Object.keys(req.body).length !== requiredProperties.length
-  ) {
+  // Excluir 'id' de la validación
+  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
+
+  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
     return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
   }
 
@@ -264,13 +273,26 @@ exports.getProviderById = (req, res) => {
     return res.status(400).json({ error: 'El nombre del proveedor es obligatorio' });
   }
 
-  const nuevoProveedor = new Proveedor(null, nombre, contacto);
+  // Generar un ID único
+  const uniqueId = generateUniqueId();
 
-  // Guardar el proveedor
-  await Proveedor.save(nuevoProveedor);
+  const nuevoProveedor = {
+    id: uniqueId,
+    nombre,
+    contacto,
+  };
 
-  // Devolver el proveedor agregado
-  res.json(nuevoProveedor);
+  try {
+    // Llama a tu función de guardar el proveedor
+    await Proveedor.save(nuevoProveedor);
+
+    // Devolver el proveedor agregado
+    res.json(nuevoProveedor);
+    return;
+  } catch (error) {
+    console.error('Error al agregar el proveedor:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
 exports.updateProvider = async (req, res) => {
