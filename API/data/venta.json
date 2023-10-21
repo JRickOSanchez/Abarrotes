@@ -42,5 +42,16 @@
         "precioUnitario": 15.75
       }
     ]
+  },
+  {
+    "cliente": "Nombre del Cliente",
+    "fechaVenta": "2023-10-21",
+    "productosVendidos": [
+      {
+        "producto": "Nombre del Producto",
+        "cantidad": 2,
+        "precioUnitario": 10
+      }
+    ]
   }
 ]
