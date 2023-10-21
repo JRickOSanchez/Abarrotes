@@ -255,12 +255,12 @@ exports.getProviderById = (req, res) => {
   res.json(provider);
 };
 
- // Funcion para añadir un proveedor
+// Funcion para añadir un proveedor
 exports.addProvider = async (req, res) => {
   const { nombre, contacto } = req.body;
 
   // Validar los datos del proveedor
-  const requiredProperties = ['nombre'];
+  const requiredProperties = ['nombre', 'contacto'];
 
   // Excluir 'id' de la validación
   const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
@@ -269,8 +269,8 @@ exports.addProvider = async (req, res) => {
     return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
   }
 
-  if (!nombre) {
-    return res.status(400).json({ error: 'El nombre del proveedor es obligatorio' });
+  if (!nombre || !contacto) {
+    return res.status(400).json({ error: 'El nombre y el contacto del proveedor son obligatorios' });
   }
 
   // Generar un ID único
@@ -291,7 +291,7 @@ exports.addProvider = async (req, res) => {
     return;
   } catch (error) {
     console.error('Error al agregar el proveedor:', error);
-    res.status(500).json({ error: 'Error interno de los servidor' });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
