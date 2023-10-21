@@ -397,47 +397,47 @@ function encontrarCategoriaPorId(id, categorias) {
 
   // Función para agregar una nueva categoría
   exports.addCategory = (req, res) => {
-  const { nombre } = req.body;
-
-  // Validar los datos de la categoría
-  const requiredProperties = ['nombre'];
-
-  if (
-    !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
-    Object.keys(req.body).length !== requiredProperties.length
-  ) {
-    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
-  }
-
-  if (!nombre) {
-    return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
-  }
-
-  const newCategory = new Categoria(generateUniqueId(), nombre);
-
-  try {
-    // Leer datos actuales de categorías desde el archivo
-    const categoriasData = fs.readFileSync(filePath3, 'utf-8');
-    let categorias = JSON.parse(categoriasData);
-
-    // Verificar si categorías es un array, si no, inicializar como array vacío
-    if (!Array.isArray(categorias)) {
-      categorias = [];
+    const { nombre } = req.body;
+  
+    // Validar los datos de la categoría
+    const requiredProperties = ['nombre'];
+  
+    if (
+      !requiredProperties.every(prop => req.body.hasOwnProperty(prop)) ||
+      Object.keys(req.body).length !== requiredProperties.length
+    ) {
+      return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
     }
-
-    // Agregar la nueva categoría al array de categorías
-    categorías.push(newCategory);
-
-    // Escribir el array actualizado de categorías de nuevo al archivo
-    fs.writeFileSync(filePath3, JSON.stringify(categorias, null, 2));
-
-    // Responder con la nueva categoría añadida
-    res.status(201).json(newCategory);
-  } catch (error) {
-    console.error('Error al agregar la categoría:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
+  
+    if (!nombre) {
+      return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
+    }
+  
+    const newCategory = new Categoria(generateUniqueId(), nombre);
+  
+    try {
+      // Leer datos actuales de categorías desde el archivo
+      const categoriasData = fs.readFileSync(filePath3, 'utf-8');
+      let categorias = JSON.parse(categoriasData);
+  
+      // Verificar si categorías es un array, si no, inicializar como array vacío
+      if (!Array.isArray(categorias)) {
+        categorias = [];
+      }
+  
+      // Agregar la nueva categoría al array de categorías
+      categorías.push(newCategory);
+  
+      // Escribir el array actualizado de categorías de nuevo al archivo
+      fs.writeFileSync(filePath3, JSON.stringify(categorias, null, 2));
+  
+      // Responder con la nueva categoría añadida
+      res.status(201).json(newCategory);
+    } catch (error) {
+      console.error('Error al agregar la categoría:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
 
 // Actualizar una categoría por su ID
 exports.updateCategory = (req, res) => {
