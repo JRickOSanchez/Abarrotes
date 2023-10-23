@@ -1,7 +1,6 @@
-
-
 const express = require('express');
 const fs = require('fs');
+const MongoClient = require('mongodb').MongoClient;
 const path = require('path');
 const Producto = require('../models/producto');
 const Categoria = require('../models/categoria');
@@ -50,37 +49,57 @@ const readAllJsonFiles = () => {
   });
 };
 
+// Importar funciones directamente
+const {
+  getAllProducts,
+  getProductById,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} = require('../models/producto');
+
 // Archivo de datos de productos
 const productosDataFromFile = fs.readFileSync(filePath, 'utf-8');
 const productos = JSON.parse(productosDataFromFile);
 
-// Funciones del controlador para producto
-exports.getAllProducts = async (req, res) => {
-  const products = await Producto.find();
-  res.json(products);
+exports.getAllProducts = (req, res) => {
+  try {
+    // Lee los productos desde el archivo JSON
+    const productosData = fs.readFileSync(filePath, 'utf-8');
+    const products = JSON.parse(productosData);
+
+    // Devuelve los productos en formato JSON
+    res.json(products);
+  } catch (error) {
+    console.error('Error al obtener todos los productos desde el archivo:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
 exports.getProductById = (req, res) => {
-  const productId = parseInt(req.params.id);
+  const productId = req.params.id;
 
   try {
+    // Lee todos los productos desde el archivo JSON
     const productosData = fs.readFileSync(filePath, 'utf-8');
-    const productos = JSON.parse(productosData);
+    const products = JSON.parse(productosData);
 
-    const product = productos.find((p) => p.id === productId);
+    // Busca el producto por ID
+    const product = products.find((p) => p.id === productId);
 
     if (!product) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
+    // Devuelve el producto en formato JSON
     res.json(product);
   } catch (error) {
-    console.error('Error al buscar el producto por ID:', error);
+    console.error('Error al buscar el producto por ID desde el archivo:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.addProduct = (req, res) => {
+exports.addProduct = async (req, res) => {
   const {
     nombre,
     descripcion,
@@ -92,23 +111,7 @@ exports.addProduct = (req, res) => {
     categoria,
   } = req.body;
 
-  // Validar los datos del producto
-  const requiredProperties = ['nombre', 'codigoBarras', 'precioCompra', 'precioVenta', 'existencias', 'proveedor', 'categoria', 'descripcion'];
-
-  // Excluir 'id' de la validación
-  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
-
-  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
-    console.log('Propiedades faltantes:', requiredProperties.filter(prop => !bodyProperties.includes(prop)));
-    console.log('Propiedades adicionales:', bodyProperties.filter(prop => !requiredProperties.includes(prop)));
-    return res.status(400).json({ error: 'Estructura incorrecta' });
-  }
-
-  // Generar un ID único
-  const uniqueId = generateUniqueId();
-
-  const newProduct = {
-    id: uniqueId,
+  const newProduct = new Producto({
     nombre,
     descripcion,
     codigoBarras,
@@ -117,107 +120,44 @@ exports.addProduct = (req, res) => {
     existencias,
     proveedor,
     categoria,
-  };
+  });
 
   try {
-    const productosData = fs.readFileSync(filePath, 'utf-8');
-    console.log('Contenido del archivo antes de agregar:', productosData);
-
-    const productos = JSON.parse(productosData);
-    productos.push(newProduct);
-
-    fs.writeFileSync(filePath, JSON.stringify(productos, null, 2));
-
-    console.log('Contenido del archivo después de escribir:', fs.readFileSync(filePath, 'utf-8'));
-
-    res.status(201).json(newProduct);
-    return;
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
   } catch (error) {
     console.error('Error al agregar el producto:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.updateProduct = (req, res) => {
-  const productId = parseInt(req.params.id);
+exports.updateProduct = async (req, res) => {
+  const productId = req.params.id;
 
   try {
-    const productosData = fs.readFileSync(filePath, 'utf-8');
-    const productos = JSON.parse(productosData);
+    const updatedProduct = await Producto.findByIdAndUpdate(productId, req.body, { new: true });
 
-    // Buscar el índice del producto por ID
-    const productIndex = productos.findIndex((p) => p.id === productId);
-
-    // Verificar si el producto existe
-    if (productIndex === -1) {
+    if (!updatedProduct) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    // Validar y actualizar los datos del producto
-    if (req.body.nombre) {
-      productos[productIndex].nombre = req.body.nombre;
-    }
-
-    if (req.body.descripcion) {
-      productos[productIndex].descripcion = req.body.descripcion;
-    }
-
-    if (req.body.codigoBarras) {
-      productos[productIndex].codigoBarras = req.body.codigoBarras;
-    }
-
-    if (req.body.precioCompra) {
-      productos[productIndex].precioCompra = req.body.precioCompra;
-    }
-
-    if (req.body.precioVenta) {
-      productos[productIndex].precioVenta = req.body.precioVenta;
-    }
-
-    if (req.body.existencias) {
-      productos[productIndex].existencias = req.body.existencias;
-    }
-
-    if (req.body.proveedor) {
-      productos[productIndex].proveedor = req.body.proveedor;
-    }
-
-    if (req.body.categoria) {
-      productos[productIndex].categoria = req.body.categoria;
-    }
-
-    // Guardar los cambios en el archivo JSON
-    fs.writeFileSync(filePath, JSON.stringify(productos, null, 2));
-
-    // Devolver el producto actualizado
-    res.json(productos[productIndex]);
+    res.json(updatedProduct);
   } catch (error) {
     console.error('Error al actualizar el producto:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.deleteProduct = (req, res) => {
-  const productId = parseInt(req.params.id);
+exports.deleteProduct = async (req, res) => {
+  const productId = req.params.id;
 
   try {
-    const productosData = fs.readFileSync(filePath, 'utf-8');
-    let productos = JSON.parse(productosData);
+    const deletedProduct = await Producto.findByIdAndRemove(productId);
 
-    // Verificar si el producto existe
-    const productIndex = productos.findIndex((p) => p.id === productId);
-
-    if (productIndex === -1) {
+    if (!deletedProduct) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    // Eliminar el producto del array
-    productos = productos.filter((p) => p.id !== productId);
-
-    // Guardar los cambios en el archivo JSON
-    fs.writeFileSync(filePath, JSON.stringify(productos, null, 2));
-
-    // Devolver un mensaje indicando que el producto ha sido eliminado
     res.json({ message: 'Producto eliminado correctamente' });
   } catch (error) {
     console.error('Error al eliminar el producto:', error);

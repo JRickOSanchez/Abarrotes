@@ -1,15 +1,38 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
+//MongoDB
+const mongoose = require('mongoose');
+
+const mongoURI = process.env.MONGODB_URI || process.env.MONGODB_URI_DEFAULT;
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+
+db.on('error', (error) => {
+  console.error('Error de conexión a la base de datos:', error);
+});
+
+db.once('open', () => {
+  console.log('Conexión exitosa a la base de datos');
+});
+
+module.exports = db;
+//MongoDB
+
 const express = require('express');
 const app = express();
 
-// Cargar variables de entorno desde el archivo .env
-const dotenv = require('dotenv');
-dotenv.config();
 
 // Middleware para analizar JSON
 app.use(express.json());
 
 // Middleware de rutas para el abarrotes
-const abarrotesRoutes = require('./routes/abarrotes');
+const abarrotesRoutes = require('./routes/abarrotes');  // Asegúrate de que la ruta sea correcta
 app.use('/abarrotes', abarrotesRoutes);
 
 // Middleware de rutas para la autenticación
@@ -24,7 +47,7 @@ app.use('/protegido', protectedRoutes);
 const errorHandler = require('./middlewares/errorHandler');
 app.use(errorHandler);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor en ejecución en el puerto ${PORT}`);
 });
