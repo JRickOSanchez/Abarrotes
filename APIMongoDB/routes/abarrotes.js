@@ -10,7 +10,7 @@ router.put('/producto/:id', abarrotesController.updateProduct);
 router.delete('/producto/:id', abarrotesController.deleteProduct);
 
 // Rutas para proveedores
-router.get('/2', abarrotesController.getAllProviders);
+router.get('/proveedor', abarrotesController.getAllProviders);
 router.post('/proveedor', abarrotesController.addProvider);
 router.get('/proveedor/:id', abarrotesController.getProviderById);
 router.put('/proveedor/:id', abarrotesController.updateProvider);

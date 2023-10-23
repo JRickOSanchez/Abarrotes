@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const { Producto, addProduct } = require('../models/producto');
 const Categoria = require('../models/categoria');
 const Proveedor = require('../models/proveedor');
+const ProveedorModel = require('../models/proveedor');
 const Compra = require('../models/compra');
 const Venta = require('../models/venta');
 const Usuario = require('../models/usuario');
@@ -164,127 +165,103 @@ exports.deleteProduct = async (req, res) => {
 const proveedoresDataFromFile = fs.readFileSync(filePath2, 'utf-8');
 const proveedores = JSON.parse(proveedoresDataFromFile);
 
+// Funciones del controlador para proveedores
 exports.getAllProviders = async (req, res) => {
   try {
-    const jsonData = await readAllJsonFiles();
-    const providers = jsonData['proveedores.json'];
-
-    if (!providers) {
-      return res.status(404).json({ error: 'No se encontraron proveedores' });
-    }
-
+    const providers = await Proveedor.find();
     res.json(providers);
   } catch (error) {
-    console.error('Error al obtener proveedores:', error);
+    console.error('Error al obtener todos los proveedores:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.getProviderById = (req, res) => {
-  const providerId = parseInt(req.params.id);
-
-  const provider = proveedores.find(provider => provider.id === providerId);
-
-  if (!provider) {
-    return res.status(404).json({ error: 'Proveedor no encontrado' });
-  }
-
-  res.json(provider);
-};
-
-// Funcion para añadir un proveedor
-exports.addProvider = async (req, res) => {
-  const { nombre, contacto } = req.body;
-
-  // Validar los datos del proveedor
-  const requiredProperties = ['nombre', 'contacto'];
-
-  // Excluir 'id' de la validación
-  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
-
-  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
-    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
-  }
-
-  if (!nombre || !contacto) {
-    return res.status(400).json({ error: 'El nombre y el contacto del proveedor son obligatorios' });
-  }
-
-  // Generar un ID único
-  const uniqueId = generateUniqueId();
-
-  const nuevoProveedor = {
-    id: uniqueId,
-    nombre,
-    contacto,
-  };
+exports.getProviderById = async (req, res) => {
+  const providerId = req.params.id;
 
   try {
-    // Llama a tu función de guardar el proveedor
-    await Proveedor.save(nuevoProveedor);
+    // Busca el proveedor por ID como una cadena
+    const provider = await ProveedorModel.find({ _id: providerId });
 
-    // Devolver el proveedor agregado
-    res.json(nuevoProveedor);
-    return;
+    if (!provider) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
+
+    res.json(provider);
   } catch (error) {
-    console.error('Error al agregar el proveedor:', error);
+    console.error('Error al buscar el proveedor por ID:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+exports.addProvider = async (req, res) => {
+  try {
+    const { id, nombre, contacto } = req.body;
+
+    const uniqueId = id || generateUniqueId();
+
+    const nuevoProveedor = new Proveedor({
+      id: uniqueId,
+      nombre: nombre,
+      contacto: contacto,
+    });
+
+    const proveedorGuardado = await nuevoProveedor.save();
+
+    res.json(proveedorGuardado);
+  } catch (error) {
+    console.error('Error al agregar el proveedor:', error);
+    res.status(500).send('Error al agregar el proveedor');
+  }
+};
 
 exports.updateProvider = async (req, res) => {
   const providerId = req.params.id;
 
-  // Obtener la lista de proveedores
-  const providers = await Proveedor.find();
+  try {
+    // Encuentra el proveedor por el campo 'id'
+    const provider = await Proveedor.find({ id: providerId });
 
-  // Buscar el proveedor por ID
-  const provider = providers.find(provider => provider.id === parseInt(providerId));
+    // Verifica si el proveedor existe
+    if (!provider || provider.length === 0) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
 
-  // Verificar si el proveedor existe
-  if (!provider) {
-    return res.status(404).json({ error: 'Proveedor no encontrado' });
+    // Actualiza los datos del proveedor
+    if (req.body.nombre) {
+      provider[0].nombre = req.body.nombre;
+    }
+
+    if (req.body.contacto) {
+      provider[0].contacto = req.body.contacto;
+    }
+
+    // Guarda los cambios
+    await provider[0].save();
+
+    // Devuelve el proveedor actualizado
+    res.json(provider[0]);
+  } catch (error) {
+    console.error('Error al actualizar el proveedor:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
-
-  // Validar y actualizar los datos del proveedor
-  if (req.body.nombre) {
-    provider.nombre = req.body.nombre;
-  }
-
-  if (req.body.contacto) {
-    provider.contacto = req.body.contacto;
-  }
-
-  // Guardar los cambios
-  fs.writeFileSync(filePath2, JSON.stringify(providers, null, 2));
-
-  // Devolver el proveedor actualizado
-  res.json(provider);
 };
 
 exports.deleteProvider = async (req, res) => {
   const providerId = req.params.id;
 
-  // Obtener la lista actual de proveedores
-  const proveedores = await Proveedor.find();
+  try {
+    const deletedProvider = await Proveedor.findByIdAndDelete(providerId);
 
-  // Buscar el proveedor por ID en la lista
-  const providerIndex = proveedores.findIndex(provider => provider.id === parseInt(providerId));
+    if (!deletedProvider) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
 
-  // Verificar si el proveedor existe
-  if (providerIndex === -1) {
-    return res.status(404).json({ error: 'Proveedor no encontrado' });
+    res.json({ message: 'Proveedor eliminado correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar el proveedor:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
-
-  // Eliminar el proveedor de la lista
-  proveedores.splice(providerIndex, 1);
-
-  // Guardar la lista actualizada de proveedores en el archivo
-  fs.writeFileSync(filePath2, JSON.stringify(proveedores, null, 2));
-
-  // Devolver un mensaje de éxito
-  res.json({ message: 'Proveedor eliminado exitosamente' });
 };
 
 // Archivo de datos de categorias
