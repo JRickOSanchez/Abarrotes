@@ -3,11 +3,11 @@ const router = express.Router();
 const abarrotesController = require('../controllers/abarrotesController');
 
 // Rutas para productos
-router.get('/',abarrotesController.getAllProducts);
-router.post('/producto',abarrotesController.addProduct);
-router.get('/producto/:id',abarrotesController.getProductById);
-router.put('/producto/:id',abarrotesController.updateProduct);
-router.delete('/producto/:id',abarrotesController.deleteProduct);
+router.get('/producto', abarrotesController.getAllProducts);
+router.post('/producto', abarrotesController.addProduct);
+router.get('/producto/:id', abarrotesController.getProductById);
+router.put('/producto/:id', abarrotesController.updateProduct);
+router.delete('/producto/:id', abarrotesController.deleteProduct);
 
 // Rutas para proveedores
 router.get('/2', abarrotesController.getAllProviders);
@@ -16,7 +16,7 @@ router.get('/proveedor/:id', abarrotesController.getProviderById);
 router.put('/proveedor/:id', abarrotesController.updateProvider);
 router.delete('/proveedor/:id', abarrotesController.deleteProvider);
 
-// Rutas para categorías
+// Rutas para categorias
 router.get('/3', abarrotesController.getAllCategories);
 router.post('/categoria', abarrotesController.addCategory);
 router.get('/categoria/:id', abarrotesController.getCategoryById);
@@ -50,5 +50,7 @@ router.post('/usuario', abarrotesController.addUsuario);
 router.get('/usuario/:id', abarrotesController.getUsuarioById);
 router.put('/usuario/:id', abarrotesController.updateUsuario);
 router.delete('/usuario/:id', abarrotesController.deleteUsuario);
+
+
 
 module.exports = router;

@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "nombre": "Manzana",
     "descripcion": "Una manzana roja y jugosa",
     "codigoBarras": "1234567890123456",
@@ -11,7 +11,7 @@
     "categoria": "Frutas"
   },
   {
-    "id": 2,
+    "id": "2",
     "nombre": "Limón",
     "descripcion": "Un limón amarillo y ácido",
     "codigoBarras": "9876543210987654",
@@ -22,7 +22,7 @@
     "categoria": "Verduras"
   },
   {
-    "id": "88c0537b-393f-4f5f-bbf1-d663f110b87f",
+    "id": "3",
     "nombre": "Manzana",
     "descripcion": "Una manzana roja y jugosa",
     "codigoBarras": "1234567890123456",
@@ -33,7 +33,18 @@
     "categoria": "Frutas"
   },
   {
-    "id": "4fbb7029-d7b8-4c4b-a680-a1035b3ffb9d",
+    "id": "4",
+    "nombre": "Limón",
+    "descripcion": "Un limón amarillo y ácido",
+    "codigoBarras": "9876543210987654",
+    "precioCompra": 5,
+    "precioVenta": 7,
+    "existencias": 50,
+    "proveedor": "El Mercado",
+    "categoria": "Verduras"
+  },
+  {
+    "id": "6535bb53a1c0b844ae5bb327",
     "nombre": "Limón",
     "descripcion": "Un limón amarillo y ácido",
     "codigoBarras": "9876543210987654",

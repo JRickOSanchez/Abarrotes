@@ -1,8 +1,8 @@
 const express = require('express');
 const fs = require('fs');
-const MongoClient = require('mongodb').MongoClient;
 const path = require('path');
-const Producto = require('../models/producto');
+const { v4: uuidv4 } = require('uuid');
+const { Producto, addProduct } = require('../models/producto');
 const Categoria = require('../models/categoria');
 const Proveedor = require('../models/proveedor');
 const Compra = require('../models/compra');
@@ -49,102 +49,97 @@ const readAllJsonFiles = () => {
   });
 };
 
-// Importar funciones directamente
-const {
-  getAllProducts,
-  getProductById,
-  addProduct,
-  updateProduct,
-  deleteProduct,
-} = require('../models/producto');
-
 // Archivo de datos de productos
 const productosDataFromFile = fs.readFileSync(filePath, 'utf-8');
 const productos = JSON.parse(productosDataFromFile);
 
-exports.getAllProducts = (req, res) => {
+// Funciones del controlador para productos
+exports.getAllProducts = async (req, res) => {
   try {
-    // Lee los productos desde el archivo JSON
-    const productosData = fs.readFileSync(filePath, 'utf-8');
-    const products = JSON.parse(productosData);
-
-    // Devuelve los productos en formato JSON
+    const products = await Producto.find();
     res.json(products);
   } catch (error) {
-    console.error('Error al obtener todos los productos desde el archivo:', error);
+    console.error('Error al obtener todos los productos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.getProductById = (req, res) => {
+exports.getProductById = async (req, res) => {
   const productId = req.params.id;
 
   try {
-    // Lee todos los productos desde el archivo JSON
-    const productosData = fs.readFileSync(filePath, 'utf-8');
-    const products = JSON.parse(productosData);
-
-    // Busca el producto por ID
-    const product = products.find((p) => p.id === productId);
+    const product = await Producto.findById(productId);
 
     if (!product) {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    // Devuelve el producto en formato JSON
     res.json(product);
   } catch (error) {
-    console.error('Error al buscar el producto por ID desde el archivo:', error);
+    console.error('Error al buscar el producto por ID:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
 exports.addProduct = async (req, res) => {
-  const {
-    nombre,
-    descripcion,
-    codigoBarras,
-    precioCompra,
-    precioVenta,
-    existencias,
-    proveedor,
-    categoria,
-  } = req.body;
-
-  const newProduct = new Producto({
-    nombre,
-    descripcion,
-    codigoBarras,
-    precioCompra,
-    precioVenta,
-    existencias,
-    proveedor,
-    categoria,
-  });
-
   try {
-    const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
+    // Obtén los datos del producto desde la solicitud (req.body u otros)
+    const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
+
+    // Generar un ID único si no se proporciona uno en la solicitud
+    const uniqueId = id || generateUniqueId();
+
+    // Crea una nueva instancia del modelo Producto
+    const nuevoProducto = new Producto({
+      id: uniqueId,
+      nombre: nombre,
+      descripcion: descripcion,
+      codigoBarras: codigoBarras,
+      precioCompra: precioCompra,
+      precioVenta: precioVenta,
+      existencias: existencias,
+      proveedor: proveedor,
+      categoria: categoria,
+      // Otros campos del producto...
+    });
+
+    // Guarda el nuevo producto en la base de datos
+    const productoGuardado = await nuevoProducto.save();
+
+    // Envía una respuesta de éxito
+    res.json(productoGuardado);
   } catch (error) {
+    // Maneja los errores, envía una respuesta de error
     console.error('Error al agregar el producto:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).send('Error al agregar el producto');
   }
 };
 
 exports.updateProduct = async (req, res) => {
-  const productId = req.params.id;
-
   try {
-    const updatedProduct = await Producto.findByIdAndUpdate(productId, req.body, { new: true });
+    const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
 
-    if (!updatedProduct) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
-    }
+    // Encuentra el producto por el campo 'id' en lugar de '_id'
+    const productoActualizado = await Producto.findOneAndUpdate(
+      { id: id }, // Busca por el campo 'id'
+      {
+        nombre: nombre,
+        descripcion: descripcion,
+        codigoBarras: codigoBarras,
+        precioCompra: precioCompra,
+        precioVenta: precioVenta,
+        existencias: existencias,
+        proveedor: proveedor,
+        categoria: categoria,
+      },
+      { new: true } // Devuelve el documento actualizado
+    );
 
-    res.json(updatedProduct);
+    // Envía la respuesta con el producto actualizado
+    res.json(productoActualizado);
   } catch (error) {
     console.error('Error al actualizar el producto:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).send('Error al actualizar el producto');
   }
 };
 
@@ -152,7 +147,7 @@ exports.deleteProduct = async (req, res) => {
   const productId = req.params.id;
 
   try {
-    const deletedProduct = await Producto.findByIdAndRemove(productId);
+    const deletedProduct = await Producto.findByIdAndDelete(productId);
 
     if (!deletedProduct) {
       return res.status(404).json({ error: 'Producto no encontrado' });
@@ -970,3 +965,4 @@ exports.deleteUsuario = (req, res) => {
   // Devolver un mensaje de éxito
   res.json({ success: true, message: 'Usuario eliminado correctamente' });
 };
+
