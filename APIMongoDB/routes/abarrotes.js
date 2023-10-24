@@ -37,20 +37,26 @@ router.get('/compra/:id', abarrotesController.getCompraById);
 router.put('/compra/:id', abarrotesController.updateCompra);
 router.delete('/compra/:id', abarrotesController.deleteCompra);
 
-// Rutas para transacciones
-router.get('/transaccion', abarrotesController.getAllTransacciones);
-router.post('/transaccion', abarrotesController.addTransaccion);
-router.get('/transaccion/:id', abarrotesController.getTransaccionById);
-router.put('/transaccion/:id', abarrotesController.updateTransaccion);
-router.delete('/transaccion/:id', abarrotesController.deleteTransaccion);
-
+//Entidades dentro de nuestro proyecto pero no estan relacionadas con los casos de uso
 // Rutas para usuarios
-router.get('/7', abarrotesController.getAllUsuarios);
-router.post('/usuario', abarrotesController.addUsuario);
-router.get('/usuario/:id', abarrotesController.getUsuarioById);
-router.put('/usuario/:id', abarrotesController.updateUsuario);
-router.delete('/usuario/:id', abarrotesController.deleteUsuario);
+//router.get('/usuario', abarrotesController.getAllUsuarios);
+//router.post('/usuario', abarrotesController.addUsuario);
+//router.get('/usuario/:id', abarrotesController.getUsuarioById);
+//router.put('/usuario/:id', abarrotesController.updateUsuario);
+//router.delete('/usuario/:id', abarrotesController.deleteUsuario);
 
+// Rutas para transacciones
+//router.get('/transaccion', abarrotesController.getAllTransacciones);
+//router.post('/transaccion', abarrotesController.addTransaccion);
+//router.get('/transaccion/:id', abarrotesController.getTransaccionById);
+//router.put('/transaccion/:id', abarrotesController.updateTransaccion);
+//router.delete('/transaccion/:id', abarrotesController.deleteTransaccion);
 
+// Rutas para compras
+//router.get('/compra', abarrotesController.getAllCompras);
+//router.post('/compra', abarrotesController.addCompra);
+//router.get('/compra/:id', abarrotesController.getCompraById);
+//router.put('/compra/:id', abarrotesController.updateCompra);
+//router.delete('/compra/:id', abarrotesController.deleteCompra);
 
 module.exports = router;

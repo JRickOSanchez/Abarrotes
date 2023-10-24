@@ -87,6 +87,11 @@ exports.addProduct = async (req, res) => {
     // Obtén los datos del producto desde la solicitud (req.body u otros)
     const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
 
+    // Realiza la validación manualmente
+    if (!nombre || !descripcion || !codigoBarras || isNaN(precioCompra) || isNaN(precioVenta) || isNaN(existencias) || !proveedor || !categoria) {
+      return res.status(400).json({ error: 'Los datos del producto son inválidos.' });
+    }
+
     // Generar un ID único si no se proporciona uno en la solicitud
     const uniqueId = id || generateUniqueId();
 
@@ -108,13 +113,14 @@ exports.addProduct = async (req, res) => {
     const productoGuardado = await nuevoProducto.save();
 
     // Envía una respuesta de éxito
-    res.json(productoGuardado);
+    res.status(201).json(productoGuardado);
   } catch (error) {
     // Maneja los errores, envía una respuesta de error
     console.error('Error al agregar el producto:', error);
     res.status(500).send('Error al agregar el producto');
   }
 };
+
 
 exports.updateProduct = async (req, res) => {
   try {
@@ -198,6 +204,11 @@ exports.addProvider = async (req, res) => {
   try {
     const { id, nombre, contacto } = req.body;
 
+    // Realiza la validación manualmente
+    if (!nombre || !contacto) {
+      return res.status(400).json({ error: 'Los datos del proveedor son inválidos.' });
+    }
+
     const uniqueId = id || generateUniqueId();
 
     const nuevoProveedor = new Proveedor({
@@ -208,7 +219,7 @@ exports.addProvider = async (req, res) => {
 
     const proveedorGuardado = await nuevoProveedor.save();
 
-    res.json(proveedorGuardado);
+    res.status(201).json(proveedorGuardado);
   } catch (error) {
     console.error('Error al agregar el proveedor:', error);
     res.status(500).send('Error al agregar el proveedor');
@@ -292,18 +303,23 @@ exports.getCategoryById = async (req, res) => {
 };
 
 exports.addCategory = async (req, res) => {
-  const { nombre } = req.body;
-
-  // Generar un ID único
-  const uniqueId = generateUniqueId();
-
-  // Crear una nueva instancia del modelo Categoria
-  const nuevaCategoria = new Categoria({
-    id: uniqueId,
-    nombre,
-  });
-
   try {
+    const { nombre } = req.body;
+
+    // Realizar la validación manualmente
+    if (!nombre) {
+      return res.status(400).json({ error: 'El nombre de la categoría es obligatorio.' });
+    }
+
+    // Generar un ID único
+    const uniqueId = generateUniqueId();
+
+    // Crear una nueva instancia del modelo Categoria
+    const nuevaCategoria = new Categoria({
+      id: uniqueId,
+      nombre,
+    });
+
     // Guardar la nueva categoría en la base de datos
     const categoriaGuardada = await nuevaCategoria.save();
 
