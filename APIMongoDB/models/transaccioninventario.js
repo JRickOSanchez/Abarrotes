@@ -1,13 +1,14 @@
 // models/transaccioninventario.js
-// Módulo para Transacciones de Inventario
-class TransaccionInventario {
-    constructor(id, tipoTransaccion, producto, cantidad, fechaTransaccion) {
-      this.id = id;
-      this.tipoTransaccion = tipoTransaccion;
-      this.producto = producto;
-      this.cantidad = cantidad;
-      this.fechaTransaccion = fechaTransaccion;
-    }
-  }
-  
-  module.exports = TransaccionInventario;
+const mongoose = require('mongoose');
+
+const transaccionInventarioSchema = new mongoose.Schema({
+  id: String,
+  tipoTransaccion: String,
+  producto: String,
+  cantidad: Number,
+  fechaTransaccion: Date,
+});
+
+const TransaccionInventarioModel = mongoose.model('TransaccionInventario', transaccionInventarioSchema);
+
+module.exports = TransaccionInventarioModel;

@@ -9,7 +9,7 @@ const ProveedorModel = require('../models/proveedor');
 const { CompraModel } = require('../models/compra');
 const { VentaModel } = require('../models/venta');
 const Usuario = require('../models/usuario');
-const TransaccionInventario = require('../models/transaccioninventario');
+const TransaccionModel = require('../models/transaccioninventario');
 const generateUniqueId = require('./generateUniqueId');
 const dataPath = './data/';
 const filePath = path.join(dataPath, 'productos.json');
@@ -647,6 +647,7 @@ const transacciones = JSON.parse(transaccionesDataFromFile);
 
 exports.getAllTransacciones = async (req, res) => {
   try {
+    const transacciones = await TransaccionModel.find();
     res.json(transacciones);
   } catch (error) {
     console.error('Error al obtener transacciones:', error);
@@ -654,111 +655,67 @@ exports.getAllTransacciones = async (req, res) => {
   }
 };
 
-exports.getTransaccionById = (req, res) => {
-  const transaccionId = parseInt(req.params.id);
+exports.getTransaccionById = async (req, res) => {
+  const transaccionId = req.params.id;
 
   try {
-    // Leer datos actuales de transacciones desde el archivo
-    const transaccionesData = fs.readFileSync(filePath6, 'utf-8');
-    const transacciones = JSON.parse(transaccionesData);
+    const transaccion = await TransaccionModel.findById(transaccionId);
 
-    // Lógica para buscar la transacción por ID
-    const foundTransaccion = transacciones.find(transaccion => transaccion.id === transaccionId.toString());
-
-    if (!foundTransaccion) {
+    if (!transaccion) {
       return res.status(404).json({ error: 'Transacción no encontrada' });
     }
 
-    res.status(200).json(foundTransaccion);
+    res.status(200).json(transaccion);
   } catch (error) {
     console.error('Error al leer el archivo de transacciones:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Función para agregar una nueva transacción
-exports.addTransaccion = (req, res) => {
+exports.addTransaccion = async (req, res) => {
   const { tipoTransaccion, producto, cantidad, fechaTransaccion } = req.body;
-
-  // Validar los datos de la transacción
-  const requiredProperties = ['tipoTransaccion', 'producto', 'cantidad', 'fechaTransaccion'];
-
-  // Excluir 'id' de la validación
-  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
-
-  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
-    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
-  }
 
   if (!tipoTransaccion || !producto || !cantidad || !fechaTransaccion) {
     return res.status(400).json({ error: 'Datos incompletos para la transacción' });
   }
 
-  // Generar un ID único
-  const uniqueId = generateUniqueId();
-
-  const nuevaTransaccion = {
-    id: uniqueId,
+  const nuevaTransaccion = new TransaccionModel({
     tipoTransaccion,
     producto,
     cantidad,
     fechaTransaccion,
-  };
+  });
 
   try {
-    // Llamada a tu función para guardar la transaccion
-    addData(filePath6, nuevaTransaccion);
-
-    // Devolver la transacción agregada
-    res.status(201).json(nuevaTransaccion);
-    return;
+    const transaccionGuardada = await nuevaTransaccion.save();
+    res.status(201).json(transaccionGuardada);
   } catch (error) {
     console.error('Error al agregar la transacción:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.updateTransaccion = (req, res) => {
+exports.updateTransaccion = async (req, res) => {
   const transaccionId = req.params.id;
   const updatedData = req.body;
 
-  // Buscar el índice de la transacción por ID
-  const transaccionIndex = transacciones.findIndex(transaccion => transaccion.id === transaccionId);
-
-  // Verificar si la transacción existe
-  if (transaccionIndex === -1) {
-    return res.status(404).json({ error: 'Transacción no encontrada' });
+  try {
+    const updatedTransaccion = await TransaccionModel.findByIdAndUpdate(transaccionId, updatedData, { new: true });
+    res.json({ success: true, message: 'Transacción actualizada correctamente', transaccion: updatedTransaccion });
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
-
-  // Validar y actualizar los datos de la transacción
-  transacciones[transaccionIndex] = { ...transacciones[transaccionIndex], ...updatedData };
-
-  // Escribir el array actualizado de transacciones de nuevo al archivo
-  fs.writeFileSync(filePath6, JSON.stringify(transacciones, null, 2));
-
-  // Devolver la transacción actualizada
-  res.json({ success: true, message: 'Transacción actualizada correctamente', transaccion: transacciones[transaccionIndex] });
 };
 
-exports.deleteTransaccion = (req, res) => {
+exports.deleteTransaccion = async (req, res) => {
   const transaccionId = req.params.id;
 
-  // Buscar el índice de la transacción por ID
-  const transaccionIndex = transacciones.findIndex(transaccion => transaccion.id === transaccionId);
-
-  // Verificar si la transacción existe
-  if (transaccionIndex === -1) {
-    return res.status(404).json({ error: 'Transacción no encontrada' });
+  try {
+    await TransaccionModel.findByIdAndDelete(transaccionId);
+    res.json({ success: true, message: 'Transacción eliminada correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
-
-  // Lógica para eliminar la transacción del array
-  transacciones.splice(transaccionIndex, 1);
-
-  // Escribir el array actualizado de transacciones en el archivo
-  fs.writeFileSync(filePath6, JSON.stringify(transacciones, null, 2));
-
-  // Devolver un mensaje de éxito
-  res.json({ success: true, message: 'Transacción eliminada correctamente' });
 };
 
 // Archivo de datos de usuarios

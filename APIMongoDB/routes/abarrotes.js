@@ -38,7 +38,7 @@ router.put('/compra/:id', abarrotesController.updateCompra);
 router.delete('/compra/:id', abarrotesController.deleteCompra);
 
 // Rutas para transacciones
-router.get('/6', abarrotesController.getAllTransacciones);
+router.get('/transaccion', abarrotesController.getAllTransacciones);
 router.post('/transaccion', abarrotesController.addTransaccion);
 router.get('/transaccion/:id', abarrotesController.getTransaccionById);
 router.put('/transaccion/:id', abarrotesController.updateTransaccion);
