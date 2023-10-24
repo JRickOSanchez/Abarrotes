@@ -7,7 +7,7 @@ const { Categoria, CategoriaClass } = require('../models/categoria');
 const Proveedor = require('../models/proveedor');
 const ProveedorModel = require('../models/proveedor');
 const Compra = require('../models/compra');
-const Venta = require('../models/venta');
+const { VentaModel } = require('../models/venta');
 const Usuario = require('../models/usuario');
 const TransaccionInventario = require('../models/transaccioninventario');
 const generateUniqueId = require('./generateUniqueId');
@@ -387,7 +387,7 @@ function addData(filePath, data) {
   try {
     // Leer datos actuales desde el archivo
     const existingData = fs.readFileSync(filePath, 'utf-8');
-    
+
     // Convertir los datos existentes a un array o asignar un array vacío si no hay datos
     let dataArray = existingData ? JSON.parse(existingData) : [];
 
@@ -412,7 +412,7 @@ function updateDataById(filePath, id, updatedData) {
   try {
     // Leer datos actuales desde el archivo
     const existingData = fs.readFileSync(filePath, 'utf-8');
-    
+
     // Convertir los datos existentes a un array o asignar un array vacío si no hay datos
     let dataArray = existingData ? JSON.parse(existingData) : [];
 
@@ -440,7 +440,7 @@ function deleteDataById(filePath, id) {
   try {
     // Leer datos actuales desde el archivo
     const existingData = fs.readFileSync(filePath, 'utf-8');
-    
+
     // Convertir los datos existentes a un array o asignar un array vacío si no hay datos
     let dataArray = existingData ? JSON.parse(existingData) : [];
 
@@ -456,47 +456,43 @@ function deleteDataById(filePath, id) {
 }
 
 // Controladores para Ventas
-exports.getAllVentas = (req, res) => {
+// Función para obtener todas las ventas desde la base de datos de MongoDB
+exports.getAllVentas = async (req, res) => {
   try {
-    // console.log('Leyendo datos de ventas desde:', filePath5);
-    const ventas = getAllData(filePath5);
-    // console.log('Ventas obtenidas:', ventas);
-
+    // Usa el modelo VentaModel en lugar de Ventas
+    const ventas = await VentaModel.find();
     res.json(ventas);
   } catch (error) {
     console.error('Error al obtener ventas:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-exports.getVentaById = (req, res) => {
+// Función para obtener una venta por su ID desde la base de datos de MongoDB
+exports.getVentaById = async (req, res) => {
   const ventaId = req.params.id;
 
   try {
-    const ventas = getAllData(filePath5);
-    const foundVenta = findDataById(filePath5, ventaId);
+    const venta = await VentaModel.findById(ventaId);
 
-    if (!foundVenta) {
+    if (!venta) {
       return res.status(404).json({ error: 'Venta no encontrada' });
     }
 
-    res.status(200).json(foundVenta);
+    res.json(venta);
   } catch (error) {
     console.error('Error al obtener venta por ID:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Función para agregar una nueva venta
-exports.addVenta = (req, res) => {
+// Función para agregar una nueva venta a la base de datos de MongoDB
+exports.addVenta = async (req, res) => {
   const { cliente, fechaVenta, productosVendidos } = req.body;
 
   // Validar los datos de la venta
   const requiredProperties = ['cliente', 'fechaVenta', 'productosVendidos'];
 
-  // Excluir 'id' de la validación
-  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
-
-  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
+  if (!requiredProperties.every(prop => Object.keys(req.body).includes(prop))) {
     return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
   }
 
@@ -504,46 +500,71 @@ exports.addVenta = (req, res) => {
     return res.status(400).json({ error: 'Datos incompletos para la venta' });
   }
 
-  // Generar un ID único
-  const uniqueId = generateUniqueId();
-
-  const newVenta = {
-    id: uniqueId,
+  // Reemplaza VentaModel.create por new VentaModel
+  const newVenta = new VentaModel({
     cliente,
     fechaVenta,
     productosVendidos,
-  };
+  });
 
   try {
-    // Lógica para agregar la nueva venta al archivo o base de datos
-    addData(filePath5, newVenta);
-
-    res.status(201).json(newVenta);
+    const ventaGuardada = await newVenta.save();
+    res.status(201).json(ventaGuardada);
   } catch (error) {
     console.error('Error al agregar venta:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
+
 };
 
-exports.updateVenta = (req, res) => {
+// Función para actualizar una venta por su ID en la base de datos de MongoDB
+exports.updateVenta = async (req, res) => {
   const ventaId = req.params.id;
-  const updatedData = req.body;
+  const { cliente, fechaVenta, productosVendidos } = req.body;
+
+  // Validar los datos de la venta
+  const requiredProperties = ['cliente', 'fechaVenta', 'productosVendidos'];
+
+  if (!requiredProperties.every(prop => Object.keys(req.body).includes(prop))) {
+    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
+  }
+
+  if (!cliente || !fechaVenta || !productosVendidos) {
+    return res.status(400).json({ error: 'Datos incompletos para la venta' });
+  }
 
   try {
-    updateDataById(filePath5, ventaId, updatedData);
-    res.json({ success: true, message: 'Venta actualizada correctamente' });
+    const ventaActualizada = await VentaModel.findByIdAndUpdate(
+      ventaId,
+      { cliente, fechaVenta, productosVendidos },
+      { new: true }
+    );
+
+    if (!ventaActualizada) {
+      return res.status(404).json({ error: 'Venta no encontrada' });
+    }
+
+    res.json(ventaActualizada);
   } catch (error) {
+    console.error('Error al actualizar venta:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.deleteVenta = (req, res) => {
+// Función para eliminar una venta por su ID desde la base de datos de MongoDB
+exports.deleteVenta = async (req, res) => {
   const ventaId = req.params.id;
 
   try {
-    deleteDataById(filePath5, ventaId);
-    res.json({ success: true, message: 'Venta eliminada correctamente' });
+    const ventaEliminada = await VentaModel.findByIdAndDelete(ventaId);
+
+    if (!ventaEliminada) {
+      return res.status(404).json({ error: 'Venta no encontrada' });
+    }
+
+    res.json({ message: 'Venta eliminada correctamente' });
   } catch (error) {
+    console.error('Error al eliminar venta:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
@@ -609,7 +630,7 @@ exports.addCompra = (req, res) => {
   try {
     // Llamada a tu función para guardar la compra 
     addData(filePath4, newCompra);
-  
+
     // Responder con la nueva compra añadida
     res.status(201).json(newCompra);
     return;
@@ -709,7 +730,7 @@ exports.addTransaccion = (req, res) => {
   try {
     // Llamada a tu función para guardar la transaccion
     addData(filePath6, nuevaTransaccion);
-  
+
     // Devolver la transacción agregada
     res.status(201).json(nuevaTransaccion);
     return;

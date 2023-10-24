@@ -24,7 +24,7 @@ router.put('/categoria/:id', abarrotesController.updateCategory);
 router.delete('/categoria/:id', abarrotesController.deleteCategory);
 
 // Rutas para ventas
-router.get('/4', abarrotesController.getAllVentas);
+router.get('/venta', abarrotesController.getAllVentas);
 router.post('/venta', abarrotesController.addVenta);
 router.get('/venta/:id', abarrotesController.getVentaById);
 router.put('/venta/:id', abarrotesController.updateVenta);

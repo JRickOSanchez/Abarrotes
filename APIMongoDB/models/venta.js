@@ -1,12 +1,19 @@
 // models/venta.js
-// Módulo para Ventas
-class Venta {
-    constructor(id, cliente, fechaVenta, productosVendidos) {
-      this.id = id;
-      this.cliente = cliente;
-      this.fechaVenta = fechaVenta;
-      this.productosVendidos = productosVendidos;
-    }
-  }
-  
-  module.exports = Venta;
+const mongoose = require('mongoose');
+
+const ventaSchema = new mongoose.Schema({
+  id: String,
+  cliente: String,
+  fechaVenta: Date,
+  productosVendidos: [{
+    producto: String,
+    cantidad: Number,
+    precioUnitario: Number
+  }],
+});
+
+const VentaModel = mongoose.model('Venta', ventaSchema);
+
+module.exports = {
+  VentaModel: VentaModel,
+};
