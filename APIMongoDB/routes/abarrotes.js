@@ -31,7 +31,7 @@ router.put('/venta/:id', abarrotesController.updateVenta);
 router.delete('/venta/:id', abarrotesController.deleteVenta);
 
 // Rutas para compras
-router.get('/5', abarrotesController.getAllCompras);
+router.get('/compra', abarrotesController.getAllCompras);
 router.post('/compra', abarrotesController.addCompra);
 router.get('/compra/:id', abarrotesController.getCompraById);
 router.put('/compra/:id', abarrotesController.updateCompra);

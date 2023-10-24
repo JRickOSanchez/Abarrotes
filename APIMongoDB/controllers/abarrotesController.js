@@ -6,7 +6,7 @@ const { Producto, addProduct } = require('../models/producto');
 const { Categoria, CategoriaClass } = require('../models/categoria');
 const Proveedor = require('../models/proveedor');
 const ProveedorModel = require('../models/proveedor');
-const Compra = require('../models/compra');
+const { CompraModel } = require('../models/compra');
 const { VentaModel } = require('../models/venta');
 const Usuario = require('../models/usuario');
 const TransaccionInventario = require('../models/transaccioninventario');
@@ -569,25 +569,21 @@ exports.deleteVenta = async (req, res) => {
   }
 };
 
-// Archivo de datos de compras
-const comprasDataFromFile = fs.readFileSync(filePath5, 'utf-8');
-const compras = JSON.parse(comprasDataFromFile);
-
 // Funciones del controlador para compras
-exports.getAllCompras = (req, res) => {
+exports.getAllCompras = async (req, res) => {
   try {
-    const compras = getAllData(filePath4);
+    const compras = await CompraModel.find();
     res.json(compras);
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.getCompraById = (req, res) => {
+exports.getCompraById = async (req, res) => {
   const compraId = req.params.id;
 
   try {
-    const compra = findDataById(filePath4, compraId);
+    const compra = await CompraModel.findById(compraId);
 
     if (!compra) {
       return res.status(404).json({ error: 'Compra no encontrada' });
@@ -600,63 +596,45 @@ exports.getCompraById = (req, res) => {
 };
 
 // Función para agregar una nueva compra
-exports.addCompra = (req, res) => {
+exports.addCompra = async (req, res) => {
   const { proveedor, fechaCompra, productosComprados } = req.body;
-
-  // Validar los datos de la compra
-  const requiredProperties = ['proveedor', 'fechaCompra', 'productosComprados'];
-
-  // Excluir 'id' de la validación
-  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
-
-  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
-    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
-  }
 
   if (!proveedor || !fechaCompra || !productosComprados) {
     return res.status(400).json({ error: 'Datos incompletos para la compra' });
   }
 
-  // Generar un ID único
-  const uniqueId = generateUniqueId();
-
-  const newCompra = {
-    id: uniqueId,
+  const newCompra = new CompraModel({
     proveedor,
     fechaCompra,
     productosComprados,
-  };
+  });
 
   try {
-    // Llamada a tu función para guardar la compra 
-    addData(filePath4, newCompra);
-
-    // Responder con la nueva compra añadida
-    res.status(201).json(newCompra);
-    return;
+    const compraGuardada = await newCompra.save();
+    res.status(201).json(compraGuardada);
   } catch (error) {
     console.error('Error al agregar la compra:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.updateCompra = (req, res) => {
+exports.updateCompra = async (req, res) => {
   const compraId = req.params.id;
   const updatedData = req.body;
 
   try {
-    updateDataById(filePath4, compraId, updatedData);
-    res.json({ success: true, message: 'Compra actualizada correctamente' });
+    const updatedCompra = await CompraModel.findByIdAndUpdate(compraId, updatedData, { new: true });
+    res.json({ success: true, message: 'Compra actualizada correctamente', compra: updatedCompra });
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.deleteCompra = (req, res) => {
+exports.deleteCompra = async (req, res) => {
   const compraId = req.params.id;
 
   try {
-    deleteDataById(filePath4, compraId);
+    await CompraModel.findByIdAndDelete(compraId);
     res.json({ success: true, message: 'Compra eliminada correctamente' });
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });

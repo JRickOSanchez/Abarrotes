@@ -1,12 +1,19 @@
 // models/compra.js
-// Módulo para Compras
-class Compra {
-    constructor(id, proveedor, fechaCompra, productosComprados) {
-      this.id = id;
-      this.proveedor = proveedor;
-      this.fechaCompra = fechaCompra;
-      this.productosComprados = productosComprados;
-    }
-  }
-  
-  module.exports = Compra;
+const mongoose = require('mongoose');
+
+const compraSchema = new mongoose.Schema({
+  id: String,
+  proveedor: String,
+  fechaCompra: Date,
+  productosComprados: [{
+    nombre: String,
+    cantidad: Number,
+    precioUnitario: Number
+  }],
+});
+
+const CompraModel = mongoose.model('Compra', compraSchema);
+
+module.exports = {
+  CompraModel: CompraModel,
+};
