@@ -17,7 +17,7 @@ router.put('/proveedor/:id', abarrotesController.updateProvider);
 router.delete('/proveedor/:id', abarrotesController.deleteProvider);
 
 // Rutas para categorias
-router.get('/3', abarrotesController.getAllCategories);
+router.get('/categoria', abarrotesController.getAllCategories);
 router.post('/categoria', abarrotesController.addCategory);
 router.get('/categoria/:id', abarrotesController.getCategoryById);
 router.put('/categoria/:id', abarrotesController.updateCategory);

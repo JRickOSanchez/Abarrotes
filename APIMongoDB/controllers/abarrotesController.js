@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { Producto, addProduct } = require('../models/producto');
-const Categoria = require('../models/categoria');
+const { Categoria, CategoriaClass } = require('../models/categoria');
 const Proveedor = require('../models/proveedor');
 const ProveedorModel = require('../models/proveedor');
 const Compra = require('../models/compra');
@@ -264,17 +264,9 @@ exports.deleteProvider = async (req, res) => {
   }
 };
 
-// Archivo de datos de categorias
-const categoriasDataFromFile = fs.readFileSync(filePath3, 'utf-8');
-const categorias = JSON.parse(categoriasDataFromFile);
-
-// Funciones del controlador para categorias
-// Obtener todas las categorías
 exports.getAllCategories = async (req, res) => {
   try {
-    const categoriasData = fs.readFileSync(filePath3, 'utf-8');
-    const categorias = JSON.parse(categoriasData);
-
+    const categorias = await Categoria.find();
     res.json(categorias);
   } catch (error) {
     console.error('Error al obtener todas las categorías:', error);
@@ -282,143 +274,85 @@ exports.getAllCategories = async (req, res) => {
   }
 };
 
-// Función para encontrar una categoría por ID
-function encontrarCategoriaPorId(id, categorias) {
-  return categorias.find(categoria => categoria.id === id);
-}
-
-  exports.getCategoryById = (req, res) => {
+exports.getCategoryById = async (req, res) => {
   const categoryId = req.params.id;
 
   try {
-    // Leer datos actuales de categorías desde el archivo
-    const categoriasData = fs.readFileSync(filePath3, 'utf-8');
-    const categorias = JSON.parse(categoriasData);
+    const categoria = await Categoria.findById(categoryId);
 
-    // Lógica para buscar la categoría por ID
-    const foundCategory = encontrarCategoriaPorId(categoryId, categorias);
-
-    if (!foundCategory) {
+    if (!categoria) {
       return res.status(404).json({ error: 'Categoría no encontrada' });
     }
 
-    res.status(200).json(foundCategory);
+    res.json(categoria);
   } catch (error) {
-    console.error('Error al leer el archivo de categorías:', error);
+    console.error('Error al buscar la categoría por ID:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Función para agregar una nueva categoría
-exports.addCategory = (req, res) => {
+exports.addCategory = async (req, res) => {
   const { nombre } = req.body;
-
-  // Validar los datos de la categoría
-  const requiredProperties = ['nombre'];
-
-  // Excluir 'id' de la validación
-  const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
-
-  if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
-    return res.status(400).json({ error: 'Estructura incorrecta en el cuerpo de la solicitud' });
-  }
-
-  if (!nombre) {
-    return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
-  }
 
   // Generar un ID único
   const uniqueId = generateUniqueId();
 
-  const newCategory = {
+  // Crear una nueva instancia del modelo Categoria
+  const nuevaCategoria = new Categoria({
     id: uniqueId,
     nombre,
-  };
+  });
 
   try {
-    // Leer datos actuales de categorías desde el archivo
-    const categoriasData = fs.readFileSync(filePath3, 'utf-8');
-    let categorias = JSON.parse(categoriasData);
-
-    // Verificar si categorías es un array, si no, inicializar como array vacío
-    if (!Array.isArray(categorias)) {
-      categorias = [];
-    }
-
-    // Agregar la nueva categoría al array de categorías
-    categorias.push(newCategory);
-
-    // Escribir el array actualizado de categorías de nuevo al archivo
-    fs.writeFileSync(filePath3, JSON.stringify(categorias, null, 2));
+    // Guardar la nueva categoría en la base de datos
+    const categoriaGuardada = await nuevaCategoria.save();
 
     // Responder con la nueva categoría añadida
-    res.status(201).json(newCategory);
+    res.status(201).json(categoriaGuardada);
   } catch (error) {
     console.error('Error al agregar la categoría:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Actualizar una categoría por su ID
-exports.updateCategory = (req, res) => {
+exports.updateCategory = async (req, res) => {
   const categoryId = req.params.id;
 
   try {
-    const categoriasData = fs.readFileSync(filePath3, 'utf-8');
-    const categorias = JSON.parse(categoriasData);
+    const { nombre } = req.body;
 
-    // Buscar el índice de la categoría por ID
-    const categoryIndex = categorias.findIndex((c) => c.id === categoryId);
+    // Buscar y actualizar la categoría por el campo 'id'
+    const categoriaActualizada = await Categoria.findOneAndUpdate(
+      { id: categoryId },
+      { nombre },
+      { new: true }
+    );
 
-    // Verificar si la categoría existe
-    if (categoryIndex === -1) {
-      return res.status(404).json({ error: 'Categoría no encontrada' });
-    }
-
-    // Validar y actualizar los datos de la categoría
-    if (req.body.nombre !== undefined) {
-      categorias[categoryIndex].nombre = req.body.nombre;
-    }
-
-    fs.writeFileSync(filePath3, JSON.stringify(categorias, null, 2));
-
-    // Devolver la categoría actualizada y un mensaje
-    res.json({ success: true, message: 'Categoría actualizada correctamente', categoria: categorias[categoryIndex] });
+    // Responder con la categoría actualizada
+    res.json(categoriaActualizada);
   } catch (error) {
     console.error('Error al actualizar la categoría:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-exports.deleteCategory = (req, res) => {
+exports.deleteCategory = async (req, res) => {
   const categoryId = req.params.id;
 
   try {
-    // Leer datos actuales de categorías desde el archivo
-    const categoriasData = fs.readFileSync(filePath3, 'utf-8');
-    const categorias = JSON.parse(categoriasData);
+    const deletedCategory = await Categoria.findOneAndDelete({ id: categoryId });
 
-    // Buscar el índice de la categoría por ID
-    const categoryIndex = categorias.findIndex((c) => c.id === categoryId);
-
-    // Verificar si la categoría existe
-    if (categoryIndex === -1) {
+    if (!deletedCategory) {
       return res.status(404).json({ error: 'Categoría no encontrada' });
     }
 
-    // Lógica para eliminar la categoría...
-    categorias.splice(categoryIndex, 1);
-
-    // Escribir las categorías actualizadas en el archivo
-    fs.writeFileSync(filePath3, JSON.stringify(categorias, null, 2));
-
-    // Devolver un mensaje de éxito
     res.json({ success: true, message: 'Categoría eliminada correctamente' });
   } catch (error) {
     console.error('Error al eliminar la categoría:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
 
 // Archivo de datos de ventas
 const ventasDataFromFile = fs.readFileSync(filePath4, 'utf-8');
