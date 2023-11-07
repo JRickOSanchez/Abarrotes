@@ -1,62 +1,69 @@
 const express = require('express');
 const router = express.Router();
 const abarrotesController = require('../controllers/abarrotesController');
+const productoController = require('../controllers/productoController');
+const proveedorController = require('../controllers/proveedorController');
+const categoriaController = require('../controllers/categoriaController');
+const ventaController = require('../controllers/ventaController');
+const compraController = require('../controllers/compraController');
+const usuarioController = require('../controllers/usuarioController');
+const transaccionController = require('../controllers/transaccionController');
 
 // Rutas para productos
-router.get('/producto', abarrotesController.getAllProducts);
-router.post('/producto', abarrotesController.addProduct);
-router.get('/producto/:id', abarrotesController.getProductById);
-router.put('/producto/:id', abarrotesController.updateProduct);
-router.delete('/producto/:id', abarrotesController.deleteProduct);
+router.get('/producto', productoController.getAllProducts);
+router.post('/producto', productoController.addProduct);
+router.get('/producto/:id', productoController.getProductById);
+router.put('/producto/:id', productoController.updateProduct);
+router.delete('/producto/:id', productoController.deleteProduct);
 
 // Rutas para proveedores
-router.get('/proveedor', abarrotesController.getAllProviders);
-router.post('/proveedor', abarrotesController.addProvider);
-router.get('/proveedor/:id', abarrotesController.getProviderById);
-router.put('/proveedor/:id', abarrotesController.updateProvider);
-router.delete('/proveedor/:id', abarrotesController.deleteProvider);
+router.get('/proveedor', proveedorController.getAllProviders);
+router.post('/proveedor', proveedorController.addProvider);
+router.get('/proveedor/:id', proveedorController.getProviderById);
+router.put('/proveedor/:id', proveedorController.updateProvider);
+router.delete('/proveedor/:id', proveedorController.deleteProvider);
 
 // Rutas para categorias
-router.get('/categoria', abarrotesController.getAllCategories);
-router.post('/categoria', abarrotesController.addCategory);
-router.get('/categoria/:id', abarrotesController.getCategoryById);
-router.put('/categoria/:id', abarrotesController.updateCategory);
-router.delete('/categoria/:id', abarrotesController.deleteCategory);
+router.get('/categoria', categoriaController.getAllCategories);
+router.post('/categoria', categoriaController.addCategory);
+router.get('/categoria/:id', categoriaController.getCategoryById);
+router.put('/categoria/:id', categoriaController.updateCategory);
+router.delete('/categoria/:id', categoriaController.deleteCategory);
 
 // Rutas para ventas
-router.get('/venta', abarrotesController.getAllVentas);
-router.post('/venta', abarrotesController.addVenta);
-router.get('/venta/:id', abarrotesController.getVentaById);
-router.put('/venta/:id', abarrotesController.updateVenta);
-router.delete('/venta/:id', abarrotesController.deleteVenta);
+router.get('/venta', ventaController.getAllVentas);
+router.post('/venta', ventaController.addVenta);
+router.get('/venta/:id', ventaController.getVentaById);
+router.put('/venta/:id', ventaController.updateVenta);
+router.delete('/venta/:id', ventaController.deleteVenta);
 
 // Rutas para compras
-router.get('/compra', abarrotesController.getAllCompras);
-router.post('/compra', abarrotesController.addCompra);
-router.get('/compra/:id', abarrotesController.getCompraById);
-router.put('/compra/:id', abarrotesController.updateCompra);
-router.delete('/compra/:id', abarrotesController.deleteCompra);
+router.get('/compra', compraController.getAllCompras);
+router.post('/compra', compraController.addCompra);
+router.get('/compra/:id', compraController.getCompraById);
+router.put('/compra/:id', compraController.updateCompra);
+router.delete('/compra/:id', compraController.deleteCompra);
 
 //Entidades dentro de nuestro proyecto pero no estan relacionadas con los casos de uso
 // Rutas para usuarios
-//router.get('/usuario', abarrotesController.getAllUsuarios);
-//router.post('/usuario', abarrotesController.addUsuario);
-//router.get('/usuario/:id', abarrotesController.getUsuarioById);
-//router.put('/usuario/:id', abarrotesController.updateUsuario);
-//router.delete('/usuario/:id', abarrotesController.deleteUsuario);
+//router.get('/usuario', usuarioController.getAllUsuarios);
+//router.post('/usuario', usuarioController.addUsuario);
+//router.get('/usuario/:id', usuarioController.getUsuarioById);
+//router.put('/usuario/:id', usuarioController.updateUsuario);
+//router.delete('/usuario/:id', usuarioController.deleteUsuario);
 
 // Rutas para transacciones
-//router.get('/transaccion', abarrotesController.getAllTransacciones);
-//router.post('/transaccion', abarrotesController.addTransaccion);
-//router.get('/transaccion/:id', abarrotesController.getTransaccionById);
-//router.put('/transaccion/:id', abarrotesController.updateTransaccion);
-//router.delete('/transaccion/:id', abarrotesController.deleteTransaccion);
+//router.get('/transaccion', transaccionController.getAllTransacciones);
+//router.post('/transaccion', transaccionController.addTransaccion);
+//router.get('/transaccion/:id', transaccionController.getTransaccionById);
+//router.put('/transaccion/:id', transaccionController.updateTransaccion);
+//router.delete('/transaccion/:id', transaccionController.deleteTransaccion);
 
 // Rutas para compras
-//router.get('/compra', abarrotesController.getAllCompras);
-//router.post('/compra', abarrotesController.addCompra);
-//router.get('/compra/:id', abarrotesController.getCompraById);
-//router.put('/compra/:id', abarrotesController.updateCompra);
-//router.delete('/compra/:id', abarrotesController.deleteCompra);
+//router.get('/compra', compraController.getAllCompras);
+//router.post('/compra', compraController.addCompra);
+//router.get('/compra/:id', compraController.getCompraById);
+//router.put('/compra/:id', compraController.updateCompra);
+//router.delete('/compra/:id', compraController.deleteCompra);
 
 module.exports = router;
