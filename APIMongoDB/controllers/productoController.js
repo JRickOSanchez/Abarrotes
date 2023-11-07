@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { Producto, addProduct } = require('../models/producto');
-const generateUniqueId = require('./generateUniqueId');
 const dataPath = './data/';
 const filePath = path.join(dataPath, 'productos.json');
 
@@ -41,20 +40,26 @@ exports.getProductById = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
   try {
-    // Obtén los datos del producto desde la solicitud (req.body u otros)
-    const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
+    const {
+      id,
+      nombre,
+      descripcion,
+      codigoBarras,
+      precioCompra,
+      precioVenta,
+      existencias,
+      proveedor,
+      categoria,
+    } = req.body;
 
     // Realiza la validación manualmente
     if (!nombre || !descripcion || !codigoBarras || isNaN(precioCompra) || isNaN(precioVenta) || isNaN(existencias) || !proveedor || !categoria) {
       return res.status(400).json({ error: 'Los datos del producto son inválidos.' });
     }
 
-    // Generar un ID único si no se proporciona uno en la solicitud
-    const uniqueId = id || generateUniqueId();
-
     // Crea una nueva instancia del modelo Producto
     const nuevoProducto = new Producto({
-      id: uniqueId,
+      id: id || generateUniqueId(), // Genera un ID único si no se proporciona uno en la solicitud
       nombre: nombre,
       descripcion: descripcion,
       codigoBarras: codigoBarras,
@@ -63,7 +68,6 @@ exports.addProduct = async (req, res) => {
       existencias: existencias,
       proveedor: proveedor,
       categoria: categoria,
-      // Otros campos del producto...
     });
 
     // Guarda el nuevo producto en la base de datos
@@ -77,7 +81,6 @@ exports.addProduct = async (req, res) => {
     res.status(500).send('Error al agregar el producto');
   }
 };
-
 
 exports.updateProduct = async (req, res) => {
   try {

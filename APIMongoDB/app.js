@@ -1,3 +1,6 @@
+const express = require('express');
+const app = express();
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -24,15 +27,11 @@ db.once('open', () => {
 module.exports = db;
 //MongoDB
 
-const express = require('express');
-const app = express();
-
-
 // Middleware para analizar JSON
 app.use(express.json());
 
 // Middleware de rutas para el abarrotes
-const abarrotesRoutes = require('./routes/abarrotes');  // Asegúrate de que la ruta sea correcta
+const abarrotesRoutes = require('./routes/abarrotes');  
 app.use('/abarrotes', abarrotesRoutes);
 
 // Middleware de rutas para la autenticación

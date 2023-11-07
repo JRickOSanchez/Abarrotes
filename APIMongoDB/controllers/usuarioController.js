@@ -1,25 +1,46 @@
-const express = require('express');
-const fs = require('fs');
+const jwt = require('jsonwebtoken');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 const generateUniqueId = require('./generateUniqueId');
-const dataPath = './data/';
+const { v4: uuidv4 } = require('uuid');
+
+const dataPath = path.join(__dirname, '..', 'data'); // Ajusta '..' según la estructura de tu proyecto
 const filePath7 = path.join(dataPath, 'usuarios.json');
+const secretKey = process.env.SECRET_KEY || 'tu-secreto-seguro'; // Utiliza variables de entorno para secretos
+
+const expiresIn = 60; // 60 segundos (1 minuto)
 
 // Archivo de datos de usuarios
-const usuariosDataFromFile = fs.readFileSync(filePath7, 'utf-8');
-const usuarios = JSON.parse(usuariosDataFromFile);
+let usuariosData = [];
+
+exports.addData = (data) => {
+ usuariosData.push(data);
+};
+
+// Lee el archivo de usuarios si existe
+if (fs.existsSync(filePath7)) {
+  const usuariosDataFromFile = fs.readFileSync(filePath7, 'utf-8');
+  usuarios = JSON.parse(usuariosDataFromFile);
+}
+
+const generateToken = (userId) => {
+  return jwt.sign({ user: userId }, secretKey, { expiresIn });
+};
+
+const addData = (filePath, data) => {
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+};
 
 exports.getAllUsuarios = async (req, res) => {
   try {
-    res.json(usuarios);
+     res.json(usuariosData);
   } catch (error) {
-    console.error('Error al obtener usuarios:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+     console.error('Error al obtener usuarios:', error);
+     res.status(500).json({ error: 'Error interno del servidor' });
   }
-};
+ };
 
-exports.getUsuarioById = (req, res) => {
+ exports.getUsuarioById = (req, res) => {
   const usuarioId = parseInt(req.params.id);
 
   try {
@@ -37,14 +58,11 @@ exports.getUsuarioById = (req, res) => {
   }
 };
 
-// Función para agregar un nuevo usuario
 exports.addUsuario = (req, res) => {
   const { username, password, rol } = req.body;
 
   // Validar los datos del usuario
   const requiredProperties = ['username', 'password', 'rol'];
-
-  // Excluir 'id' de la validación
   const bodyProperties = Object.keys(req.body).filter(prop => prop !== 'id');
 
   if (!requiredProperties.every(prop => bodyProperties.includes(prop)) || bodyProperties.length !== requiredProperties.length) {
@@ -66,11 +84,15 @@ exports.addUsuario = (req, res) => {
   };
 
   try {
-    //Función para guardar el usuario
-    addData(filePath7, nuevoUsuario);
+    // Función para guardar el usuario
+    usuarios.push(nuevoUsuario);
+    addData(filePath7, usuarios);
 
-    // Devolver el usuario agregado
-    res.status(201).json(nuevoUsuario);
+    // Generar el token JWT
+    const token = generateToken(uniqueId);
+
+    // Devolver el usuario agregado y el token
+    res.status(201).json({ usuario: nuevoUsuario, token });
     return;
   } catch (error) {
     console.error('Error al agregar el usuario:', error);
@@ -94,7 +116,7 @@ exports.updateUsuario = (req, res) => {
   usuarios[usuarioIndex] = { ...usuarios[usuarioIndex], ...updatedData };
 
   // Escribir el array actualizado de usuarios de nuevo al archivo
-  fs.writeFileSync(filePath7, JSON.stringify(usuarios, null, 2));
+  addData(filePath7, usuarios);
 
   // Devolver el usuario actualizado
   res.json({ success: true, message: 'Usuario actualizado correctamente', usuario: usuarios[usuarioIndex] });
@@ -115,7 +137,7 @@ exports.deleteUsuario = (req, res) => {
   usuarios.splice(usuarioIndex, 1);
 
   // Escribir el array actualizado de usuarios en el archivo
-  fs.writeFileSync(filePath7, JSON.stringify(usuarios, null, 2));
+  addData(filePath7, usuarios);
 
   // Devolver un mensaje de éxito
   res.json({ success: true, message: 'Usuario eliminado correctamente' });

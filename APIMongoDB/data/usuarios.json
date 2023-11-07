@@ -22,5 +22,131 @@
     "username": "usuario4",
     "password": "contrasena4",
     "rol": "usuario"
+  },
+  {
+    "id": "cd0c0a2938854759bdcde66557010191",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "603e19ecaf1440bbae2e4b7e35b88fa9",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "4e62c33266b44e3584a18dd45a33fd87",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "6ab955bbf31b4856ad171f3b759b4006",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "8378b75a908c400aa473a8377194bc43",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "d851b29770f246fab120f1ca95765d1b",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "3d49cf2b26804cbfa834f23d88d14bb7",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "0a02f482306547e49ad027ea5e115dde",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "18972ef15fe544b0ac2a4193dfe44f20",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "c8fe9a12a62f4be7abfb33e356e8e5b1",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "1a4721d082664eb58dbd03ea62b72cc4",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "5ee5fef3dd524dfb9c3371462bf8e14f",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "ff08ea6396cc42e0baa3a03fbc72017a",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "373f8b767e0440a08b22c4850a5eb3f4",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "27675f378e07424cb3da5740d1b74f4b",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "9ea7fc7b8d0448a4aced3477de225a33",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "500e3a5c62cd4fa7ab50933c5bb79ae6",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "fd4f4258ae19469b9f6ea900423f17fd",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "97b425054e8549a2aa3e11d09c1f8933",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "ada179a4-20ae-4103-b3f3-07ea84b89153",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
+  },
+  {
+    "id": "e2c47af6-e101-46c9-a8fd-57966cc55854",
+    "username": "usuario2",
+    "password": "contrasena2",
+    "rol": "usuario"
   }
 ]

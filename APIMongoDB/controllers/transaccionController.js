@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const TransaccionModel = require('../models/transaccioninventario');
-const generateUniqueId = require('./generateUniqueId');
 const dataPath = './data/';
 const filePath6 = path.join(dataPath, 'transacciones.json');
 

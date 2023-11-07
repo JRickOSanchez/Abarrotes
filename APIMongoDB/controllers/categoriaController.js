@@ -10,7 +10,6 @@ const { CompraModel } = require('../models/compra');
 const { VentaModel } = require('../models/venta');
 const Usuario = require('../models/usuario');
 const TransaccionModel = require('../models/transaccioninventario');
-const generateUniqueId = require('./generateUniqueId');
 const dataPath = './data/';
 const filePath = path.join(dataPath, 'productos.json');
 const filePath2 = path.join(dataPath, 'proveedores.json');

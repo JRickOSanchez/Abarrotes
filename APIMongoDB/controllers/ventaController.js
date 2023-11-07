@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { VentaModel } = require('../models/venta');
-const generateUniqueId = require('./generateUniqueId');
 const dataPath = './data/';
 const filePath4 = path.join(dataPath, 'compra.json');
 
