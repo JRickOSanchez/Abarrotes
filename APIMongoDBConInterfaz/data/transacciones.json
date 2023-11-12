@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "tipoTransaccion": "Entrada",
+    "producto": "ProductoA",
+    "cantidad": 50,
+    "fechaTransaccion": "2023-10-13"
+  },
+  {
+    "id": "2",
+    "tipoTransaccion": "Salida",
+    "producto": "ProductoB",
+    "cantidad": 20,
+    "fechaTransaccion": "2023-10-14"
+  },
+  {
+    "id": "3",
+    "tipoTransaccion": "Entrada",
+    "producto": "ProductoC",
+    "cantidad": 30,
+    "fechaTransaccion": "2023-10-15"
+  }
+]
