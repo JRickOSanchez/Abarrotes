@@ -35,10 +35,10 @@ const abarrotesRoutes = require('./routes/abarrotes');//Por ahorita esta general
 const productosRoutes = require('./routes/productos');
 const categoriasRoutes = require('./routes/categorias');
 const proveedoresRoutes = require('./routes/proveedores');
-const transaccioninventarioRoutes = require('./routes/transacciones');
-const comprasRoutes = require('./routes/compras');
+const transaccioninventarioRoutes = require('./routes/transaccioninventario');
+const comprasRoutes = require('./routes/compra');
 const usuariosRoutes = require('./routes/usuarios');
-const ventasRoutes = require('./routes/ventas');
+const ventasRoutes = require('./routes/venta');
 app.use('/abarrotes', abarrotesRoutes);
 app.use('/categorias', categoriasRoutes);
 app.use('/proveedores', proveedoresRoutes);
