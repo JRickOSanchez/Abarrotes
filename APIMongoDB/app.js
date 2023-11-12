@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -31,8 +33,24 @@ module.exports = db;
 app.use(express.json());
 
 // Middleware de rutas para el abarrotes
-const abarrotesRoutes = require('./routes/abarrotes');  
+const abarrotesRoutes = require('./routes/abarrotes');//Por ahorita esta general porque aqui se estaban haciendo todas las entidades
+const productosRoutes = require('./routes/productos');
+const categoriasRoutes = require('./routes/categorias');
+const proveedoresRoutes = require('./routes/proveedores');
+const transaccioninventarioRoutes = require('./routes/transacciones');
+const comprasRoutes = require('./routes/compras');
+const usuariosRoutes = require('./routes/usuarios');
+const ventasRoutes = require('./routes/ventas');
 app.use('/abarrotes', abarrotesRoutes);
+app.use('/categorias', categoriasRoutes);
+app.use('/proveedores', proveedoresRoutes);
+app.use('/transacciones', transaccioninventarioRoutes);
+app.use('/compras', comprasRoutes);
+app.use('/productos', productosRoutes);
+app.use('/usuarios', usuariosRoutes);
+app.use('/ventas', ventasRoutes);
+
+
 
 // Middleware de rutas para la autenticación
 const authRoutes = require('./routes/authRoutes');

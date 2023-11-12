@@ -1,12 +1,13 @@
 // models/usuario.js
 // Módulo para Usuarios
-class Usuario {
-    constructor(id, username, password, rol) {
-      this.id = id;
-      this.username = username;
-      this.password = password;
-      this.rol = rol;
-    }
-  }
-  
-  module.exports = Usuario;
+const mongoose = require('mongoose');
+const usuarioSchema = new mongoose.Schema({
+  id: String,
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+  rol: { type: String, required: true },
+});
+
+const Usuario = mongoose.model('Usuario', usuarioSchema);
+
+module.exports = Usuario;
