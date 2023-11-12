@@ -1,7 +1,5 @@
 const express = require('express');
 const app = express();
-const passport = require('passport');
-const JwtStrategy = require('passport-jwt');
 
 const dotenv = require('dotenv');
 dotenv.config();
