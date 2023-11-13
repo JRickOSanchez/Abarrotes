@@ -1,31 +1,54 @@
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
-const Usuario = require('../models/usuario'); // Asegúrate de tener el modelo de usuario definido
+const Usuario = require('../models/usuario');
 
-exports.register = async (req, res) => {
+// Registro de usuario
+exports.registrar = async (req, res) => {
     try {
-      const { name, username, password } = req.body; // Cambiado de 'user' a 'username'
-      // Asegúrate de que estás utilizando correctamente el modelo Usuario aquí
-      const newUser = new Usuario({ username, password, rol: 'tu_rol_predeterminado' });
-      await newUser.save();
-  
-      res.status(201).json({ message: 'Usuario registrado exitosamente' });
+        const { name, username, password } = req.body;
+
+        if (!name || !username || !password) {
+            return res.render('register', {
+                alert: true,
+                alertTitle: 'Advertencia',
+                alertMessage: 'Todos los campos son obligatorios.',
+                alertIcon: 'info',
+                showConfirmButton: true,
+                timer: false,
+                ruta: 'register',
+            });
+        }
+
+        const hashedPassword = await bcryptjs.hash(password, 10);
+
+        const nuevoUsuario = new Usuario({ name, username, password: hashedPassword, rol: 'usuario' });
+        await nuevoUsuario.save();
+
+        res.render('register', {
+            alert: true,
+            alertTitle: 'Registro exitoso',
+            alertMessage: '¡Usuario registrado correctamente!',
+            alertIcon: 'success',
+            showConfirmButton: false,
+            timer: 800,
+            ruta: 'login',
+        });
     } catch (error) {
-      console.error('Error al registrar el usuario:', error);
-      res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error en la aplicación:', error);
+        res.status(500).render('error', { error: 'Error interno del servidor' });
     }
 };
 
-
+// Inicio de sesión
 exports.login = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { user, pass } = req.body;
 
-        if (!username || !password) {
+        if (!user || !pass) {
             return res.render('login', {
                 alert: true,
                 alertTitle: 'Advertencia',
-                alertMessage: 'Ingrese un nombre de usuario y contraseña',
+                alertMessage: 'Los campos de usuario y contraseña son obligatorios.',
                 alertIcon: 'info',
                 showConfirmButton: true,
                 timer: false,
@@ -33,9 +56,9 @@ exports.login = async (req, res) => {
             });
         }
 
-        const foundUser = await Usuario.findOne({ username });
+        const foundUser = await Usuario.findOne({ username: user });
 
-        if (!foundUser || !(await bcryptjs.compare(password, foundUser.password))) {
+        if (!foundUser || !(await bcryptjs.compare(pass, foundUser.password))) {
             return res.render('login', {
                 alert: true,
                 alertTitle: 'Error',
@@ -68,17 +91,20 @@ exports.login = async (req, res) => {
             ruta: '',
         });
     } catch (error) {
-        console.log(error);
+        console.error('Error en la aplicación:', error);
+        res.status(500).render('error', { error: 'Error interno del servidor' });
     }
 };
+
+// Middleware de autenticación
 exports.isAuthenticated = async (req, res, next) => {
     if (req.cookies.jwt) {
         try {
             const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRETO);
-            console.log('Decoded JWT:', decoded); // Agrega este log
+            console.log('Decoded JWT:', decoded);
 
             const foundUser = await Usuario.findById(decoded.id);
-            console.log('Found User:', foundUser); // Agrega este log
+            console.log('Found User:', foundUser);
 
             if (!foundUser) {
                 return next();
@@ -87,7 +113,7 @@ exports.isAuthenticated = async (req, res, next) => {
             req.user = foundUser;
             return next();
         } catch (error) {
-            console.log('Error decoding JWT:', error); // Agrega este log
+            console.error('Error decoding JWT:', error);
             return next();
         }
     } else {
@@ -95,6 +121,7 @@ exports.isAuthenticated = async (req, res, next) => {
     }
 };
 
+// Cierre de sesión
 exports.logout = (req, res) => {
     res.clearCookie('jwt');
     return res.redirect('/');

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const app = express();
+const bodyParser = require('body-parser');
 
 // Configuración de Express y middleware
 app.use(express.urlencoded({ extended: true }));
