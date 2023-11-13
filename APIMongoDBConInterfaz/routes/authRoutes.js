@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const authRoutes = require('../routes/authRoutes');
 
-router.get('/', authController.isAuthenticated, (req, res) => {
-  console.log('User:', req.user); // Agrega este log
-  res.render('index', { user: req.user });
+router.get('/', authController.estaAutenticado, (req, res) => {
+  res.render('index', { user: req.usuario });
 });
 
 router.get('/login', (req, res) => {
@@ -16,8 +14,8 @@ router.get('/register', (req, res) => {
   res.render('register');
 });
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
+router.post('/register', authController.registrar);
+router.post('/login', authController.iniciarSesion);
 router.get('/logout', authController.logout);
 
 module.exports = router;
