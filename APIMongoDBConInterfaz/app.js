@@ -2,13 +2,22 @@ require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const authController = require('./controllers/authController');
+const db = require('./database/db');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 // Configuración de Express y middleware
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cookieParser());
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
+console.log('MONGODB_URI_DEFAULT:', process.env.MONGODB_URI_DEFAULT);
+
+// Log de las variables de entorno
+console.log('MONGODB_URI_DEFAULT:', process.env.MONGODB_URI_DEFAULT);
 
 // Configuración del motor de plantillas EJS
 app.set('view engine', 'ejs');
@@ -16,7 +25,8 @@ app.set('view engine', 'ejs');
 // Carpeta public para archivos estáticos
 app.use(express.static('public'));
 
-// Middleware para analizar JSON
+// Middleware para procesar datos desde formularios
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Configuración de las variables de entorno
@@ -25,7 +35,8 @@ dotenv.config({ path: './env/.env' });
 // Middleware para trabajar con cookies
 app.use(cookieParser());
 
-// MongoDB
+//MongoDB
+
 const mongoURI = process.env.MONGODB_URI || process.env.MONGODB_URI_DEFAULT;
 
 if (!mongoURI) {
@@ -38,11 +49,8 @@ mongoose.connect(mongoURI, {
   useUnifiedTopology: true,
 });
 
-const db = mongoose.connection;
-
 db.on('error', (error) => {
   console.error('Error de conexión a la base de datos:', error);
-  process.exit(1);
 });
 
 db.once('open', () => {
@@ -81,7 +89,7 @@ const protectedRoutes = require('./routes/protectedRoutes');
 app.use('/protegido', protectedRoutes);
 
 // Llamada al router principal
-app.use('/', require('./routes/authRoutes'));
+app.use('/', require('./routes/router'));
 
 // Middleware para evitar el almacenamiento en caché
 app.use(function (req, res, next) {
