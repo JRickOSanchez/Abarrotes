@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const path = require('path');
 const fs = require('fs');
 const generateUniqueId = require('./generateUniqueId');
@@ -113,6 +114,40 @@ exports.deleteUsuario = async (req, res) => {
     res.json({ success: true, message: 'Usuario eliminado correctamente' });
   } catch (error) {
     console.error('Error al eliminar el usuario:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.authenticateUsuario = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    console.log('Usuario y contraseña recibidos:', username, password);
+
+    // Verifica si el usuario existe en la base de datos
+    const usuario = await Usuario.findOne({ username });
+
+    console.log('Usuario encontrado en la base de datos:', usuario);
+
+    if (!usuario) {
+      return res.status(401).json({ error: 'Nombre de usuario y/o contraseña incorrectos' });
+    }
+
+    // Verifica la contraseña
+    const passwordValid = await bcrypt.compare(password, usuario.password);
+
+    console.log('Contraseña válida:', passwordValid);
+
+    if (!passwordValid) {
+      return res.status(401).json({ error: 'Nombre de usuario y/o contraseña incorrectos' });
+    }
+
+    // Genera el token JWT
+    const token = generateToken(usuario.id);
+
+    res.json({ usuario, token });
+  } catch (error) {
+    console.error('Error al autenticar el usuario:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
