@@ -19,7 +19,7 @@
 
   <main class="form-signin text-center shadow-lg p-3 mb-5">
 
-    <form id="formLogin" action="/login/protected" method="POST"></form>
+    <form id="formLogin" action="/login/protected" method="POST">
       <img class="mb-4" src="img/bootstrap-logo.svg" alt="" width="72" height="57">
       <div class="form-floating">
         <input type="text" class="form-control" id="user" name="user" placeholder="User">
@@ -54,8 +54,8 @@
     document.getElementById('btnGenerateJWT').addEventListener('click', async () => {
       try {
         // Generar un token sin necesidad de autenticación
-        const response = await fetch('/protegido/generateToken', {
-          method: 'GET',
+        const response = await fetch('/generateToken', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -63,8 +63,11 @@
 
         const result = await response.json();
 
-        // Almacenar el token en el campo oculto
-        document.getElementById('token').value = result.token;
+        // Muestra el token en la consola para verificar
+        console.log('Token generado:', result.jwtToken);
+
+        // Almacena el token en el campo oculto
+        document.getElementById('token').value = result.jwtToken;
 
         // Mostrar mensaje
         Swal.fire({

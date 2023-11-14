@@ -17,11 +17,14 @@ router.get('/', (req, res) => {
     res.render('register');
   });
 
+  
 
 //router para los métodos del controller
 router.post('/register', authController.registrar)
 router.post('/login', authController.login)
 router.get('/logout', authController.logout)
+router.get('/register', authController.renderRegisterPage);
+router.post('/login/protected', authController.loginProtected);
 
 exports.login = async (req, res) => {
     try {

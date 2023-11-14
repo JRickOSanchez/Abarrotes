@@ -39,6 +39,10 @@ exports.registrar = async (req, res) => {
     }
 };
 
+exports.renderRegisterPage = (req, res) => {
+    res.render('register');
+  };
+
 // Inicio de sesión
 exports.login = async (req, res) => {
     try {
@@ -121,6 +125,35 @@ exports.isAuthenticated = async (req, res, next) => {
         res.redirect('/login');
     }
 };
+
+exports.loginProtected = async (req, res) => {
+    try {
+      const { token } = req.body; // Asegúrate de tener el middleware adecuado para parsear el cuerpo
+  
+      if (!token) {
+        return res.status(400).json({ error: 'Token no proporcionado' });
+      }
+  
+      // Lógica para verificar el token y autenticar al usuario
+      const decodedToken = jwt.verify(token, 'tu-secreto-seguro'); // Ajusta esto con tu secreto
+      const userId = decodedToken.id;
+  
+      // Buscar al usuario en la base de datos
+      const user = await Usuario.findById(userId);
+  
+      if (!user) {
+        return res.status(401).json({ error: 'Usuario no encontrado' });
+      }
+  
+      // Más lógica de autenticación si es necesario
+  
+      // Ejemplo de respuesta
+      res.json({ message: 'Usuario autenticado con éxito', user });
+    } catch (error) {
+      console.error('Error en la autenticación:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
 
 // Cierre de sesión
 exports.logout = (req, res) => {

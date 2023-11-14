@@ -95,7 +95,7 @@ app.use(function (req, res, next) {
 app.use('/jwt', jwtHandler);
 
 // Middleware de rutas para generar un token sin autenticación
-app.use('/generateToken', generateTokenRoute);
+app.use('/', generateTokenRoute);
 
 // Middleware de errores
 const errorHandler = require('./middlewares/errorHandler');
