@@ -70,9 +70,10 @@ exports.login = async (req, res) => {
             });
         }
 
-        const token = jwt.sign({ id: foundUser._id }, process.env.JWT_SECRETO, {
-            expiresIn: process.env.JWT_TIEMPO_EXPIRA,
-        });
+        const expiresIn = '1h'; // Token expira después de 1 hora
+        const payload = { id: foundUser._id };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRETO, { expiresIn });
 
         const cookiesOptions = {
             expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),

@@ -8,7 +8,6 @@ const Proveedor = require('../models/proveedor');
 const ProveedorModel = require('../models/proveedor');
 const { CompraModel } = require('../models/compra');
 const { VentaModel } = require('../models/venta');
-const Usuario = require('../models/usuario');
 const TransaccionModel = require('../models/transaccioninventario');
 const dataPath = './data/';
 const filePath = path.join(dataPath, 'productos.json');
