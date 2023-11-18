@@ -77,7 +77,7 @@ exports.login = async (req, res) => {
         const expiresIn = '1h'; // Token expira después de 1 hora
         const payload = { id: foundUser._id };
 
-        const token = jwt.sign(payload, process.env.JWT_SECRETO, { expiresIn });
+        const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn });
 
         const cookiesOptions = {
             expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
@@ -105,7 +105,7 @@ exports.login = async (req, res) => {
 exports.isAuthenticated = async (req, res, next) => {
     if (req.cookies.jwt) {
         try {
-            const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRETO);
+            const decoded = jwt.verify(req.cookies.jwt, process.env.SECRET_KEY);
             console.log('Decoded JWT:', decoded);
 
             const foundUser = await Usuario.findById(decoded.id);
@@ -128,33 +128,34 @@ exports.isAuthenticated = async (req, res, next) => {
 
 exports.loginProtected = async (req, res) => {
     try {
-      const { token } = req.body; // Asegúrate de tener el middleware adecuado para parsear el cuerpo
+      const { token } = req.body;
   
       if (!token) {
         return res.status(400).json({ error: 'Token no proporcionado' });
       }
   
-      // Lógica para verificar el token y autenticar al usuario
-      const decodedToken = jwt.verify(token, 'tu-secreto-seguro'); // Ajusta esto con tu secreto
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       const userId = decodedToken.id;
   
-      // Buscar al usuario en la base de datos
       const user = await Usuario.findById(userId);
   
       if (!user) {
         return res.status(401).json({ error: 'Usuario no encontrado' });
       }
   
-      // Más lógica de autenticación si es necesario
+      // Aquí puedes agregar más lógica de autenticación si es necesario
   
-      // Ejemplo de respuesta
-      res.json({ message: 'Usuario autenticado con éxito', user });
+      res.json({ message: 'Usuario autenticado con éxito', username: user.username });
     } catch (error) {
       console.error('Error en la autenticación:', error);
       res.status(500).json({ error: 'Error interno del servidor' });
     }
-  };
+};
 
+exports.logout = (req, res) => {
+    res.clearCookie('jwt');
+    return res.redirect('/');
+};
 // Cierre de sesión
 exports.logout = (req, res) => {
     res.clearCookie('jwt');

@@ -1,5 +1,4 @@
 module.exports = (err, req, res, next) => {
-  console.error(err.stack);
 
   // Verificar si ya se ha enviado una respuesta
   if (res.headersSent) {

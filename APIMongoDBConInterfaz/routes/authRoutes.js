@@ -18,11 +18,11 @@ const authenticateUser = async (username, password) => {
 // Ruta para manejar el formulario de inicio de sesión protegido
 router.post('/login/protected', async (req, res) => {
   // Obtén el usuario y la contraseña del cuerpo de la solicitud
-  const { user, pass } = req.body;
+  const { username, password } = req.body;
 
   try {
     // Verifica las credenciales del usuario
-    const usuario = await authenticateUser(user, pass);
+    const usuario = await authenticateUser(username, password);
 
     if (usuario) {
       // Si las credenciales son válidas, genera un token JWT
