@@ -2,11 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
-const authController = require('./controllers/authController');
 const db = require('./database/db');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const app = express();
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+app.use('/auth', authRoutes);
 
 // Configuración de Express y middleware
 app.use(express.urlencoded({ extended: true }));

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT Example</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+<h2>Generar y Verificar JWT</h2>
+
+<button onclick="generateJWT()">Generar JWT</button>
+<button onclick="verifyJWT()">Verificar JWT</button>
+
+<script>
+  function generateJWT() {
+    const userId = '123'; // Reemplaza con el userId deseado
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3000/generar-jwt', // Reemplaza con la URL de tu servidor
+      contentType: 'application/json',
+      data: JSON.stringify({ userId }),
+      success: function(response) {
+        console.log('Token generado:', response.jwtToken);
+      },
+      error: function(error) {
+        console.error('Error al generar el JWT:', error.responseText);
+      }
+    });
+  }
+
+  function verifyJWT() {
+    const userId = '123'; // Reemplaza con el userId deseado
+    const jwtToken = prompt('Ingresa el JWT a verificar:');
+    if (!jwtToken) {
+      console.log('Operación cancelada');
+      return;
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:3000/verificar-jwt', // Reemplaza con la URL de tu servidor
+      contentType: 'application/json',
+      data: JSON.stringify({ userId, jwtToken }),
+      success: function(response) {
+        console.log('El token es válido:', response.isValid);
+      },
+      error: function(error) {
+        console.error('Error al verificar el JWT:', error.responseText);
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
