@@ -14,6 +14,11 @@ router.get('/register', (req, res)=>{
     res.render('register')
 })
 
+router.get('/productos', (req, res)=>{
+    res.render('tabla')
+})
+
+
 
 //router para los métodos del controller
 router.post('/register', authController.register)
