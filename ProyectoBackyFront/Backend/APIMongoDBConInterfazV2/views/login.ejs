@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/login.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <title>Login Page</title>
+</head>
+<body>
+
+<section class="container forms">
+  <div class="form login">
+    <div class="form-content">
+      <header>Login</header>
+
+      <!-- Tu formulario -->
+      <form class="forms" action="/login" method="POST">
+        <div class="field input-field">
+          <input type="text" id="username" name="username" placeholder="Usuario" class="input" required>
+        </div>
+        <div class="field input-field">
+          <input type="password" id="password" name="password" placeholder="Contraseña" class="password" required>
+          <i class="bx bx-hide eye-icon"></i>
+        </div>
+        <div class="field button-field">
+          <button type="submit">Iniciar sesión</button>
+        </div>
+      </form>
+
+      <div class="form-link">
+        <span>¿No tienes una cuenta?
+          <a href="/register" class="link signup-link">Regístrate</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
