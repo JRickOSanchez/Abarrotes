@@ -14,9 +14,16 @@ app.use(cookieParser());
 
 //Configuracion para HTML
 
-app.get('/Frontend/LoginComponent/login.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Frontend', 'LoginComponent', 'login.html'));
+// Configurar la carpeta de vistas
+app.set('views', path.join(__dirname, 'views'));
+
+app.get('/tabla', (req, res) => {
+  res.render('tabla'); // Renderiza views/tabla.ejs
 });
+
+
+
+//Configuracion para HTML
 
 // Configuración del motor de plantillas EJS
 app.set('view engine', 'ejs');
