@@ -18,11 +18,17 @@ router.get('/productos', (req, res)=>{
     res.render('tabla')
 })
 
+router.get('/editar', (req, res)=>{
+    res.render('editar')
+})
+
+
 
 
 //router para los métodos del controller
 router.post('/register', authController.register)
 router.post('/login', authController.login)
 router.get('/logout', authController.logout)
+
 
 module.exports = router

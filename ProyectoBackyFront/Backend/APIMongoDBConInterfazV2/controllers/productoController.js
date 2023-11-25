@@ -83,6 +83,22 @@ exports.addProduct = async (req, res) => {
   }
 };
 
+exports.editProductPage = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await Producto.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+
+    res.render('editar', { product });
+  } catch (error) {
+    console.error('Error al cargar la página de edición:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+};
+
 exports.updateProduct = async (req, res) => {
   try {
     const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
@@ -124,6 +140,16 @@ exports.deleteProduct = async (req, res) => {
     res.json({ message: 'Producto eliminado correctamente' });
   } catch (error) {
     console.error('Error al eliminar el producto:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.renderTabla = async (req, res) => {
+  try {
+    const productos = await Producto.find();
+    res.render('tabla', { products: productos });
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
