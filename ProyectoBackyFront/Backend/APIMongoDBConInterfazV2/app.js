@@ -6,6 +6,8 @@ require('dotenv').config();
 const path = require('path');
 const router = express.Router();
 const productoController = require('./controllers/productoController');
+const proveedorController = require('./controllers/proveedorController');
+
 
 const app = express();
 
@@ -76,6 +78,7 @@ db.once('open', () => {
   app.use('/productos', productosRoutes);
   app.use('/usuarios', usuariosRoutes);
   app.use('/ventas', ventasRoutes);
+  app.use('/', proveedoresRoutes);
 
   // Middleware de rutas para la autenticación
   const authRoutes = require('./routes/authRoutes');

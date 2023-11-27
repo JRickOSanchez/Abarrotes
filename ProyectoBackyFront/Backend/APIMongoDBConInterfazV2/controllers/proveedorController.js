@@ -1,29 +1,16 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-const { Producto, addProduct } = require('../models/producto');
-const { Categoria, CategoriaClass } = require('../models/categoria');
+
 const Proveedor = require('../models/proveedor');
-const ProveedorModel = require('../models/proveedor');
-const { CompraModel } = require('../models/compra');
-const { VentaModel } = require('../models/venta');
-const Usuario = require('../models/usuario');
-const TransaccionModel = require('../models/transaccioninventario');
 const dataPath = './data/';
-const filePath = path.join(dataPath, 'productos.json');
 const filePath2 = path.join(dataPath, 'proveedores.json');
-const filePath3 = path.join(dataPath, 'categorias.json');
-const filePath4 = path.join(dataPath, 'compra.json');
-const filePath5 = path.join(dataPath, 'venta.json');
-const filePath6 = path.join(dataPath, 'transacciones.json');
-const filePath7 = path.join(dataPath, 'usuarios.json');
 
 // Archivo de datos de proveedores
 const proveedoresDataFromFile = fs.readFileSync(filePath2, 'utf-8');
 const proveedores = JSON.parse(proveedoresDataFromFile);
 
-// Funciones del controlador para proveedores
+// Obtener todos los proveedores
 exports.getAllProviders = async (req, res) => {
   try {
     const providers = await Proveedor.find();
@@ -34,12 +21,12 @@ exports.getAllProviders = async (req, res) => {
   }
 };
 
+// Obtener un proveedor por ID
 exports.getProviderById = async (req, res) => {
   const providerId = req.params.id;
 
   try {
-    // Busca el proveedor por ID como una cadena
-    const provider = await ProveedorModel.find({ _id: providerId });
+    const provider = await Proveedor.findById(providerId);
 
     if (!provider) {
       return res.status(404).json({ error: 'Proveedor no encontrado' });
@@ -52,19 +39,16 @@ exports.getProviderById = async (req, res) => {
   }
 };
 
+// Agregar un nuevo proveedor
 exports.addProvider = async (req, res) => {
   try {
-    const { id, nombre, contacto } = req.body;
+    const { nombre, contacto } = req.body;
 
-    // Realiza la validación manualmente
     if (!nombre || !contacto) {
       return res.status(400).json({ error: 'Los datos del proveedor son inválidos.' });
     }
 
-    const uniqueId = id || generateUniqueId();
-
     const nuevoProveedor = new Proveedor({
-      id: uniqueId,
       nombre: nombre,
       contacto: contacto,
     });
@@ -78,38 +62,29 @@ exports.addProvider = async (req, res) => {
   }
 };
 
+// Actualizar un proveedor por ID
 exports.updateProvider = async (req, res) => {
   const providerId = req.params.id;
 
   try {
-    // Encuentra el proveedor por el campo 'id'
-    const provider = await Proveedor.find({ id: providerId });
+    const provider = await Proveedor.findByIdAndUpdate(
+      providerId,
+      { $set: req.body },
+      { new: true }
+    );
 
-    // Verifica si el proveedor existe
-    if (!provider || provider.length === 0) {
+    if (!provider) {
       return res.status(404).json({ error: 'Proveedor no encontrado' });
     }
 
-    // Actualiza los datos del proveedor
-    if (req.body.nombre) {
-      provider[0].nombre = req.body.nombre;
-    }
-
-    if (req.body.contacto) {
-      provider[0].contacto = req.body.contacto;
-    }
-
-    // Guarda los cambios
-    await provider[0].save();
-
-    // Devuelve el proveedor actualizado
-    res.json(provider[0]);
+    res.json(provider);
   } catch (error) {
     console.error('Error al actualizar el proveedor:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Eliminar un proveedor por ID
 exports.deleteProvider = async (req, res) => {
   const providerId = req.params.id;
 
@@ -123,6 +98,17 @@ exports.deleteProvider = async (req, res) => {
     res.json({ message: 'Proveedor eliminado correctamente' });
   } catch (error) {
     console.error('Error al eliminar el proveedor:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
+exports.renderTabla = async (req, res) => {
+  try {
+    const productos = await Producto.find();
+    res.render('tabla', { products: productos });
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };

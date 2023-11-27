@@ -20,9 +20,5 @@ router.get('/productos', (req, res)=>{
     res.render('tabla')
 })
 
-router.get('/editar', (req, res)=>{
-    res.render('editar')
-})
-
 
 module.exports = router;
