@@ -23,7 +23,7 @@
                     </li>
                 </ul>
             </nav>
-            <a type="button" class="px-3 btn btn-danger" href="/editar/logout">Logout</a>
+            <a type="button" class="px-3 btn btn-danger" href="/logout">Logout</a>
         </div>
     </header>
 
@@ -33,7 +33,7 @@
             <div class="row">
                 <% if (product) { %>
                 <!-- Formulario para la edición del producto -->
-                <form action="/tabla/editar/<%= product._id %>" method="POST">
+                <form action="/productos/editar/<%= product._id %>" method="POST"></form>
                     <div class="form-group col-md-6 mb-3">
                         <label for="name">Nombre</label>
                         <input type="text" name="nombre" class="form-control" id="name" value="<%= product.nombre %>" required>

@@ -17,8 +17,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/productos', (req, res)=>{
-    res.render('tabla')
-})
+  res.render('productos/tabla');
+});
 
 
 module.exports = router;

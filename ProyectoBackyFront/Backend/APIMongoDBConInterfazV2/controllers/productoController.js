@@ -92,7 +92,7 @@ exports.editProductPage = async (req, res) => {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    res.render('editar', { product });
+    res.render('productos/editar', { product });
   } catch (error) {
     console.error('Error al cargar la página de edición:', error);
     res.status(500).send('Error interno del servidor');
@@ -147,7 +147,7 @@ exports.deleteProduct = async (req, res) => {
 exports.renderTabla = async (req, res) => {
   try {
     const productos = await Producto.find();
-    res.render('tabla', { products: productos });
+    res.render('productos/tabla', { products: productos });
   } catch (error) {
     console.error('Error al obtener productos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });

@@ -8,5 +8,7 @@ router.post('/proveedor', proveedorController.addProvider);
 router.get('/proveedor/:id', proveedorController.getProviderById);
 router.put('/proveedor/:id', proveedorController.updateProvider);
 router.delete('/proveedor/:id', proveedorController.deleteProvider);
+router.get('/tablaproveedores', proveedorController.renderTablaProveedores);
+router.get('/editarProveedor/:id', proveedorController.editProviderPage);
 
 module.exports = router;

@@ -62,6 +62,22 @@ exports.addProvider = async (req, res) => {
   }
 };
 
+exports.editProviderPage = async (req, res) => {
+  try {
+    const providerId = req.params.id;
+    const provider = await Proveedor.findById(providerId);
+
+    if (!provider) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
+
+    res.render('editarProveedor', { provider });
+  } catch (error) {
+    console.error('Error al cargar la página de edición del proveedor:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+};
+
 // Actualizar un proveedor por ID
 exports.updateProvider = async (req, res) => {
   const providerId = req.params.id;
@@ -103,12 +119,12 @@ exports.deleteProvider = async (req, res) => {
 };
 
 
-exports.renderTabla = async (req, res) => {
+exports.renderTablaProveedores = async (req, res) => {
   try {
-    const productos = await Producto.find();
-    res.render('tabla', { products: productos });
+    const proveedores = await Proveedor.find();
+    res.render('proveedores/tablaproveedores', { proveedores: proveedores });
   } catch (error) {
-    console.error('Error al obtener productos:', error);
+    console.error('Error al obtener proveedores:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };

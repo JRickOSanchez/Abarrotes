@@ -6,8 +6,6 @@ require('dotenv').config();
 const path = require('path');
 const router = express.Router();
 const productoController = require('./controllers/productoController');
-const proveedorController = require('./controllers/proveedorController');
-
 
 const app = express();
 
