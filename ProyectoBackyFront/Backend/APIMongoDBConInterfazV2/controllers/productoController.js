@@ -92,7 +92,7 @@ exports.editProductPage = async (req, res) => {
       return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    res.render('productos/editar', { product });
+    res.render('productos/actualizar', { product });
   } catch (error) {
     console.error('Error al cargar la página de edición:', error);
     res.status(500).send('Error interno del servidor');
@@ -103,9 +103,9 @@ exports.updateProduct = async (req, res) => {
   try {
     const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
 
-    // Encuentra el producto por el campo 'id' en lugar de '_id'
+    // Encuentra el producto por el campo '_id'
     const productoActualizado = await Producto.findOneAndUpdate(
-      { id: id }, // Busca por el campo 'id'
+      { _id: id },
       {
         nombre: nombre,
         descripcion: descripcion,
@@ -116,17 +116,21 @@ exports.updateProduct = async (req, res) => {
         proveedor: proveedor,
         categoria: categoria,
       },
-      { new: true } // Devuelve el documento actualizado
+      { new: true }
     );
 
+    // Verifica si el producto fue encontrado y actualizado
+    if (!productoActualizado) {
+      return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+
     // Envía la respuesta con el producto actualizado
-    res.json(productoActualizado);
+    res.json({ success: true, message: 'Producto actualizado correctamente' });
   } catch (error) {
-    console.error('Error al actualizar el producto:', error);
-    res.status(500).send('Error al actualizar el producto');
+    console.error('Error en el controlador de actualización:', error);
+    res.status(500).json({ success: false, message: 'Error en el servidor al actualizar el producto' });
   }
 };
-
 exports.deleteProduct = async (req, res) => {
   const productId = req.params.id;
 

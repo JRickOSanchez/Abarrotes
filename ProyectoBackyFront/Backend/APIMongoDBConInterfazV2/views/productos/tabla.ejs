@@ -32,61 +32,60 @@
 
     <div class="container">
         <div class="mb-5">
-            <div class="row">
-                <div class="form-group col-md-6 mb-3">
-                    <label for="name">Nombre</label>
-                    <input type="text" name="name" class="form-control" id="name">
+            <form action="/tabla/agregar" method="POST">
+                <div class="row">
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="name">Nombre</label>
+                        <input type="text" name="name" class="form-control" id="name">
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="description">Descripción</label>
+                        <input type="text" name="description" class="form-control" id="description">
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="barcode">Código de barras</label>
+                        <input type="text" name="barcode" class="form-control" id="barcode">
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="purchaseprice">Precio de compra</label>
+                        <input type="text" name="purchaseprice" class="form-control" id="purchaseprice">
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="sellprice">Precio de venta</label>
+                        <input type="text" name="sellprice" class="form-control" id="sellprice">
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="stock">Existencias</label>
+                        <input type="number" name="stock" class="form-control" id="stock">
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="proveedor">Proveedor</label>
+                        <input type="text" name="proveedor" class="form-control" id="proveedor">
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="category">Categoría</label>
+                        <input type="text" name="category" class="form-control" id="category">
+                    </div>
+                    <div class="col-lg-12 mt-5">
+                        <button class="btn btn-success" type="submit">Crear</button>
+                    </div>
                 </div>
-                <div class="form-group col-md-6 mb-3">
-                    <label for="description">Descripcion</label>
-                    <input type="text" name="description" class="form-control" id="description">
-                </div>
-                <div class="form-group col-md-6 mb-3">
-                    <label for="barcode">Codigo de barras</label>
-                    <input type="text" name="barcode" class="form-control" id="barcode">
-                </div>
-                <div class="form-group col-md-6 mb-3">
-                    <label for="purchaseprice">Precio compra</label>
-                    <input type="text" name="purchaseprice" class="form-control" id="purchaseprice">
-                </div>
-                <div class="form-group col-md-6 mb-3">
-                    <label for="sellprice">Precio venta</label>
-                    <input type="text" name="sellprice" class="form-control" id="sellprice">
-                </div>
-                <div class="form-group col-md-6 mb-3">
-                    <label for="stock">Existencias</label>
-                    <input type="number" name="stock" class="form-control" id="stock">
-                </div>
-                <div class="form-group col-md-6 mb-3">
-                    <label for="proveedor">Proveedor</label>
-                    <input type="text" name="proveedor" class="form-control" id="proveedor">
-                </div>
-                <div class="form-group col-md-6 mb-3">
-                    <label for="category">Categoria</label>
-                    <input type="text" name="category" class="form-control" id="category">
-                </div>
-
-                <div class="col-lg-12 mt-5">
-                    <button class="btn btn-success" id="Submit" onclick="AddData()">Crear</button>
-                </div>
-            </div>
+            </form>
         </div>
         <hr>
-        <div class="row mt-5">
             <div class="col-12">
-                <button class="btn btn-primary" onclick="window.location.href='/tabla/agregar'">Agregar Producto</button>
                 <table class="table table-bordered" id="crudTable">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
-                            <th>Descripcion</th>
-                            <th>Codigo de barras</th>
-                            <th>Precio compra</th>
-                            <th>Precio venta</th>
+                            <th>Descripción</th>
+                            <th>Código de barras</th>
+                            <th>Precio de compra</th>
+                            <th>Precio de venta</th>
                             <th>Existencias</th>
                             <th>Proveedor</th>
-                            <th>Categoria</th>
+                            <th>Categoría</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -113,6 +112,14 @@
             </div>
         </div>
     </div>
+
+    <!-- Script para eliminar productos (puedes adaptarlo según tus necesidades) -->
+    <script>
+        function eliminarProducto(id) {
+            // Lógica para eliminar producto
+            console.log('Eliminar producto con ID:', id);
+        }
+    </script>
 
 </body>
 

@@ -6,6 +6,7 @@ const Proveedor = require('../models/proveedor');
 const dataPath = './data/';
 const filePath2 = path.join(dataPath, 'proveedores.json');
 
+
 // Archivo de datos de proveedores
 const proveedoresDataFromFile = fs.readFileSync(filePath2, 'utf-8');
 const proveedores = JSON.parse(proveedoresDataFromFile);
@@ -65,13 +66,13 @@ exports.addProvider = async (req, res) => {
 exports.editProviderPage = async (req, res) => {
   try {
     const providerId = req.params.id;
-    const provider = await Proveedor.findById(providerId);
+    const providerData = await providerId;
 
-    if (!provider) {
+    if (!providerData) {
       return res.status(404).json({ error: 'Proveedor no encontrado' });
     }
 
-    res.render('editarProveedor', { provider });
+    res.render('proveedores/editarProveedor', { proveedor: providerData });
   } catch (error) {
     console.error('Error al cargar la página de edición del proveedor:', error);
     res.status(500).send('Error interno del servidor');
@@ -128,3 +129,5 @@ exports.renderTablaProveedores = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+module.exports = exports;

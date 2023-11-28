@@ -6,7 +6,9 @@ const ventaController = require('../controllers/ventaController');
 router.get('/venta', ventaController.getAllVentas);
 router.post('/venta', ventaController.addVenta);
 router.get('/venta/:id', ventaController.getVentaById);
-router.put('/venta/:id', ventaController.updateVenta);
 router.delete('/venta/:id', ventaController.deleteVenta);
+router.put('/actualizar/:id', ventaController.updateVenta);
+router.get('/tablaventas', ventaController.renderTablaVentas);
+router.get('/editar/:id', ventaController.editVentaPage);
 
 module.exports = router;

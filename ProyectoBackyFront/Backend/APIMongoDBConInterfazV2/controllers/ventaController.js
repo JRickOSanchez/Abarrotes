@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const { VentaModel } = require('../models/venta');
 const dataPath = './data/';
 const filePath4 = path.join(dataPath, 'compra.json');
+const Venta = require('../models/venta');
 
 // Archivo de datos de ventas
 const ventasDataFromFile = fs.readFileSync(filePath4, 'utf-8');
@@ -217,6 +218,32 @@ exports.deleteVenta = async (req, res) => {
     res.json({ message: 'Venta eliminada correctamente' });
   } catch (error) {
     console.error('Error al eliminar venta:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.editVentaPage = async (req, res) => {
+  try {
+    const ventaId = req.params.id;
+    const venta = await Venta.findById(ventaId);
+
+    if (!venta) {
+      return res.status(404).json({ error: 'Venta no encontrada' });
+    }
+
+    res.render('/ventas/actualizarventa', { venta });
+  } catch (error) {
+    console.error('Error al cargar la página de edición de ventas:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+};
+
+exports.renderTablaVentas = async (req, res) => {
+  try {
+    const ventas = await Venta.find();
+    res.render('/ventas/tablaventas', { ventas: ventas });
+  } catch (error) {
+    console.error('Error al obtener ventas:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };

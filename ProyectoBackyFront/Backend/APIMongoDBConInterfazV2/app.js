@@ -52,6 +52,7 @@ db.once('open', () => {
 
   // Importa el modelo después de que la conexión esté abierta
   const Producto = require('./models/producto');
+  const Venta = require('./models/venta');
 
   // Middleware para evitar el almacenamiento en caché
   app.use(function (req, res, next) {
@@ -60,7 +61,6 @@ db.once('open', () => {
   });
 
   // Middleware de rutas para el abarrotes
-  const abarrotesRoutes = require('./routes/abarrotes');
   const productosRoutes = require('./routes/productos');
   const categoriasRoutes = require('./routes/categorias');
   const proveedoresRoutes = require('./routes/proveedores');
@@ -68,7 +68,6 @@ db.once('open', () => {
   const comprasRoutes = require('./routes/compra');
   const usuariosRoutes = require('./routes/usuarios');
   const ventasRoutes = require('./routes/venta');
-  app.use('/abarrotes', abarrotesRoutes);
   app.use('/categorias', categoriasRoutes);
   app.use('/proveedores', proveedoresRoutes);
   app.use('/transacciones', transaccioninventarioRoutes);

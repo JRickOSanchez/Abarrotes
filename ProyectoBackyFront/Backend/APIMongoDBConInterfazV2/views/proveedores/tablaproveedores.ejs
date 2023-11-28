@@ -47,9 +47,7 @@
             </form>
         </div>
         <hr>
-        <div class="row mt-5">
             <div class="col-12">
-                <button class="btn btn-primary" onclick="window.location.href='/proveedores/tabla/agregar'">Agregar Proveedor</button>
                 <table class="table table-bordered" id="crudTable">
                     <thead>
                         <tr>
@@ -66,7 +64,7 @@
                                 <td><%= proveedor.nombre %></td>
                                 <td><%= proveedor.contacto %></td>
                                 <td>
-                                    <button class="btn btn-warning" onclick="window.location.href='editarProveedor/<%= proveedor._id %>'">Editar</button>
+                                    <button class="btn btn-warning" onclick="window.location.href='/editarProveedor/<%= proveedor._id %>'">Editar</button>
                                     <button class="btn btn-danger" onclick="eliminarProveedor('<%= proveedor._id %>')">Eliminar</button>
                                 </td>
                             </tr>
