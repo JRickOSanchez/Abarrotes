@@ -36,7 +36,7 @@
             <div class="row">
                 <% if (product) { %>
                     <!-- Formulario para la edición del producto -->
-                    <form id="editarForm" action="/actualizar/<%= product._id %>" method="POST">
+                    <form id="editarForm" action="/editar/<%= product._id %>" method="POST">
                         <!-- Campos del formulario -->
                         <div class="form-group col-md-6 mb-3">
                             <label for="name">Nombre</label>
@@ -64,14 +64,12 @@
             // Obtener los valores del formulario
             const nombre = document.getElementById('name').value;
             const descripcion = document.getElementById('description').value;
-
             // Crear un objeto FormData con los valores
             const formData = new FormData();
             formData.append('nombre', nombre);
             formData.append('descripcion', descripcion);
-
             // Enviar la solicitud al servidor
-            fetch('/actualizar/<%= product._id %>', {
+            fetch('/editar/<%= product._id %>', {
                 method: 'POST',
                 body: formData,
             })

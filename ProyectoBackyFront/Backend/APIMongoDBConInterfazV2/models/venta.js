@@ -12,8 +12,6 @@ const ventaSchema = new mongoose.Schema({
   }],
 });
 
-const VentaModel = mongoose.model('Venta', ventaSchema);
+const Venta = mongoose.model('Venta', ventaSchema);
 
-module.exports = {
-  VentaModel: VentaModel,
-};
+module.exports = Venta;

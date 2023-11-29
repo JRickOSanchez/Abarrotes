@@ -54,7 +54,16 @@ exports.addProduct = async (req, res) => {
     } = req.body;
 
     // Realiza la validación manualmente
-    if (!nombre || !descripcion || !codigoBarras || isNaN(precioCompra) || isNaN(precioVenta) || isNaN(existencias) || !proveedor || !categoria) {
+    if (
+      !nombre ||
+      !descripcion ||
+      !codigoBarras ||
+      isNaN(precioCompra) ||
+      isNaN(precioVenta) ||
+      isNaN(existencias) ||
+      typeof proveedor !== 'string' || 
+      !categoria
+    ) {
       return res.status(400).json({ error: 'Los datos del producto son inválidos.' });
     }
 

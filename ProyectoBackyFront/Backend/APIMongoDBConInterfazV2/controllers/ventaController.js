@@ -241,7 +241,7 @@ exports.editVentaPage = async (req, res) => {
 exports.renderTablaVentas = async (req, res) => {
   try {
     const ventas = await Venta.find();
-    res.render('/ventas/tablaventas', { ventas: ventas });
+    res.render('ventas/tablaventas', { ventas });
   } catch (error) {
     console.error('Error al obtener ventas:', error);
     res.status(500).json({ error: 'Error interno del servidor' });

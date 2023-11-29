@@ -2,23 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const { Producto, addProduct } = require('../models/producto');
-const { Categoria, CategoriaClass } = require('../models/categoria');
-const Proveedor = require('../models/proveedor');
-const ProveedorModel = require('../models/proveedor');
-const { CompraModel } = require('../models/compra');
-const { VentaModel } = require('../models/venta');
-const Usuario = require('../models/usuario');
-const TransaccionModel = require('../models/transaccioninventario');
 const dataPath = './data/';
-const filePath = path.join(dataPath, 'productos.json');
-const filePath2 = path.join(dataPath, 'proveedores.json');
-const filePath3 = path.join(dataPath, 'categorias.json');
-const filePath4 = path.join(dataPath, 'compra.json');
-const filePath5 = path.join(dataPath, 'venta.json');
-const filePath6 = path.join(dataPath, 'transacciones.json');
-const filePath7 = path.join(dataPath, 'usuarios.json');
-
+const Categoria = require('../models/categoria');
 
 exports.getAllCategories = async (req, res) => {
     try {
@@ -113,4 +98,29 @@ exports.getAllCategories = async (req, res) => {
       res.status(500).json({ error: 'Error interno del servidor' });
     }
   };
+
+  exports.editCategoryPage = async (req, res) => {
+    try {
+      const categoryId = req.params.id;
+      const category = await Categoria.findById(categoryId);
   
+      if (!category) {
+        return res.status(404).json({ error: 'Categoría no encontrada' });
+      }
+  
+      res.render('categorias/editarCategoria', { category });
+    } catch (error) {
+      console.error('Error al cargar la página de edición de categoría:', error);
+      res.status(500).send('Error interno del servidor');
+    }
+  };
+  
+  exports.renderTablaCategorias = async (req, res) => {
+    try {
+      const categorias = await Categoria.find();
+      res.render('categorias/tablacategorias', { categorias: categorias });
+    } catch (error) {
+      console.error('Error al obtener categorías:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
