@@ -41,7 +41,7 @@
                         <input type="text" name="contacto" class="form-control" id="contacto">
                     </div>
                     <div class="col-lg-12 mt-5">
-                        <button class="btn btn-success" type="submit">Crear</button>
+                        <button class="btn btn-success" type="button" onclick="crearProveedor()">Crear</button>
                     </div>
                 </div>
             </form>
@@ -90,28 +90,100 @@
                 confirmButtonText: 'Sí, eliminarlo'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Lógica para eliminar proveedor
-                    console.log('Eliminar proveedor con ID:', id);
-    
-                    // Otra opción: realizar una solicitud AJAX para eliminar el proveedor en el servidor
-    
-                    // Muestra un mensaje de éxito
-                    Swal.fire(
-                        '¡Eliminado!',
-                        'El proveedor ha sido eliminado.',
-                        'success'
-                    ).then(() => {
-                        // Puedes redirigir o realizar otras acciones después de eliminar el proveedor
-                        // En este caso, recargar la página
-                        window.location.reload();
-                    });
+                    fetch(`/proveedor/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar al proveedor');
                 }
+                return response.json();
+            })
+            .then(data => {
+                // Muestra un mensaje de éxito
+                Swal.fire(
+                    '¡Eliminado!',
+                    'El proveedor ha sido eliminado.',
+                    'success'
+                ).then(() => {
+                    // Puedes redirigir o realizar otras acciones después de eliminar
+                    // En este caso, recargar la página
+                    window.location.reload();
+                });
+            })
+            .catch(error => {
+                // Muestra un mensaje de error
+                Swal.fire(
+                    'Error',
+                    'Hubo un problema al eliminar al proveedor. Inténtalo de nuevo.',
+                    'error'
+                );
+                console.error('Error al eliminar al proveedor:', error);
             });
         }
+    });
+}
 
-        
-    </script>
+function crearProveedor() {
+    // Obtén los valores de los campos del formulario
+    const nombre = document.getElementById('nombre').value;
+    const contacto = document.getElementById('contacto').value;
+
+    // Verifica que se ingresen los datos necesarios (puedes agregar más validaciones según tus necesidades)
+    if (!nombre || !contacto) {
+        // Muestra un mensaje de error si faltan datos
+        Swal.fire(
+            'Error',
+            'Por favor, completa todos los campos.',
+            'error'
+        );
+        return;
+    }
+
+    // Simulación de una solicitud AJAX (reemplaza esto con tu lógica real)
+    fetch('/proveedores/tabla/agregar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            nombre: nombre,
+            contacto: contacto,
+        }),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al añadir al proveedor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Muestra un mensaje de éxito
+            Swal.fire(
+                '¡Creado!',
+                'El proveedor ha sido añadido exitosamente.',
+                'success'
+            ).then(() => {
+                // Puedes redirigir o realizar otras acciones después de crear el producto
+                // En este caso, recargar la página
+                window.location.reload();
+            });
+        })
+        .catch(error => {
+            // Muestra un mensaje de error
+            Swal.fire(
+                'Error',
+                'Hubo un problema al añadir al proveedor. Inténtalo de nuevo.',
+                'error'
+            );
+            console.error('Error al añadir al proveedor:', error);
+        });
+}
+</script>
 
 </body>
 
-</html>
+</html> 
