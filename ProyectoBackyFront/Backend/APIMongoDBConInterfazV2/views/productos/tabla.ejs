@@ -119,8 +119,7 @@
                                 <%= producto.categoria %>
                             </td>
                             <td>
-                                <button class="btn btn-warning"
-                                    onclick="window.location.href='/productos/actualizar/<%= producto.id %>'">Editar</button>
+                                <button class="btn btn-warning" onclick="window.location.href='/productos/actualizar/<%= producto.id %>'">Editar</button>
                                 <button class="btn btn-danger"onclick="eliminarProducto('<%= producto.id %>')">Eliminar</button>
                             </td>
                         </tr>
@@ -206,7 +205,7 @@ function crearProducto() {
     }
 
     // Simulación de una solicitud AJAX (reemplaza esto con tu lógica real)
-    fetch('/producto/agregar', {
+    fetch('/productos/agregar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

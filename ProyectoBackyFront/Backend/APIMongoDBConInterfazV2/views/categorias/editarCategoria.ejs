@@ -45,7 +45,6 @@
                         </div>
                         <div class="col-lg-12 mt-5">
                             <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
-                            <button type="button" class="btn btn-danger" onclick="eliminarCategoria('<%= categoria._id %>')">Eliminar Categoría</button>
                         </div>
                     </form>
                 <% } else { %>
@@ -57,12 +56,6 @@
 
     <!-- Script para eliminar categorías (puedes adaptarlo según tus necesidades) -->
     <script>
-        function eliminarCategoria(id) {
-            // Lógica para eliminar categoría
-            console.log('Eliminar categoría con ID:', id);
-            // Aquí podrías agregar la lógica para enviar una solicitud al servidor para eliminar la categoría
-        }
-
         function guardarCambios() {
             // Obtener los valores del formulario
             const nombre = document.getElementById('nombre').value;
