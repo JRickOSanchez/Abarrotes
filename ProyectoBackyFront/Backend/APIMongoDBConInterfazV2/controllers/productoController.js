@@ -149,16 +149,17 @@ exports.deleteProduct = async (req, res) => {
   const productId = req.params.id;
 
   try {
-    const deletedProduct = await Producto.findByIdAndDelete(productId);
+      // Realiza la eliminación utilizando el campo id
+      const result = await Producto.findOneAndDelete({ id: productId });
 
-    if (!deletedProduct) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
-    }
+      if (!result) {
+          return res.status(404).json({ message: 'Producto no encontrado' });
+      }
 
-    res.json({ message: 'Producto eliminado correctamente' });
+      res.json({ message: 'Producto eliminado con éxito' });
   } catch (error) {
-    console.error('Error al eliminar el producto:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+      console.error('Error al eliminar el producto:', error);
+      res.status(500).json({ message: 'Hubo un problema al eliminar el producto' });
   }
 };
 

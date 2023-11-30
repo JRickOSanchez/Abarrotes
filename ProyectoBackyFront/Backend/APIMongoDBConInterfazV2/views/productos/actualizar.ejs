@@ -33,7 +33,7 @@
             <div class="row">
                 <% if (producto) { %>
                     <!-- Formulario para la edición del producto -->
-                    <form id="editarForm" action="actualizar/<%= producto._id %>" method="POST">
+                    <form id="editarForm" action="productos/editar/<%= producto._id %>" method="PUT">
                         <!-- Campos del formulario -->
                         <div class="form-group col-md-6 mb-3">
                             <label for="nombre">Nombre</label>
@@ -103,8 +103,8 @@
             formData.append('categoria', categoria);
 
             // Enviar la solicitud al servidor
-            fetch('/actualizar/<%= producto._id %>', {
-                method: 'guardarCambios',
+            fetch('/editar/<%= producto._id %>', {
+                method: 'PUT',
                 body: formData,
             })
             .then(response => {

@@ -6,8 +6,8 @@ const productoController = require('../controllers/productoController');
 router.get('/producto', productoController.getAllProducts);
 router.post('/agregar', productoController.addProduct);
 router.get('/producto/:id', productoController.getProductById);
-router.delete('/producto/:id', productoController.deleteProduct);
-router.put('/actualizar/:id', productoController.updateProduct);
+router.delete('/eliminar/:id', productoController.deleteProduct);
+router.put('/editar/:id', productoController.updateProduct);
 router.get('/tabla', productoController.renderTabla);
 router.get('/actualizar/:id',productoController.editProductPage);
 
