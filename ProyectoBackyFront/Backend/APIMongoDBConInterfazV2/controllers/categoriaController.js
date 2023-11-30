@@ -4,6 +4,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const dataPath = './data/';
 const Categoria = require('../models/categoria');
+const generateUniqueId = require('./generateUniqueId');
 
 exports.getAllCategories = async (req, res) => {
     try {
