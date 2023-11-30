@@ -4,12 +4,12 @@ const productoController = require('../controllers/productoController');
 
 // Rutas para productos
 router.get('/producto', productoController.getAllProducts);
-router.post('/tabla/agregar', productoController.addProduct);
+router.post('/agregar', productoController.addProduct);
 router.get('/producto/:id', productoController.getProductById);
 router.delete('/producto/:id', productoController.deleteProduct);
-router.put('/editar/:id', productoController.updateProduct);
+router.put('/actualizar/:id', productoController.updateProduct);
 router.get('/tabla', productoController.renderTabla);
-router.get('/editar/:id',productoController.editProductPage);
+router.get('/actualizar/:id',productoController.editProductPage);
 
 router.get('/', (req, res) => {
   res.redirect('/productos/tabla');

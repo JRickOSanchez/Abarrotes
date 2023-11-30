@@ -1,5 +1,3 @@
-<!-- tabla.ejs -->
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/tabla.css" />
-    <title>Productos</title>
+    <title>Lista de Productos</title>
 </head>
 
 <body>
@@ -31,123 +29,205 @@
     </header>
 
     <div class="container">
+        <h2>Lista de Productos</h2>
         <div class="mb-5">
-            <form action="/tabla/agregar" method="POST">
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="name">Nombre</label>
-                        <input type="text" name="name" class="form-control" id="name">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="description">Descripción</label>
-                        <input type="text" name="description" class="form-control" id="description">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="barcode">Código de barras</label>
-                        <input type="text" name="barcode" class="form-control" id="barcode">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="purchaseprice">Precio de compra</label>
-                        <input type="text" name="purchaseprice" class="form-control" id="purchaseprice">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="sellprice">Precio de venta</label>
-                        <input type="text" name="sellprice" class="form-control" id="sellprice">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="stock">Existencias</label>
-                        <input type="number" name="stock" class="form-control" id="stock">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="proveedor">Proveedor</label>
-                        <input type="text" name="proveedor" class="form-control" id="proveedor">
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label for="category">Categoría</label>
-                        <input type="text" name="category" class="form-control" id="category">
-                    </div>
-                    <div class="col-lg-12 mt-5">
-                        <button class="btn btn-success" type="submit">Crear</button>
-                    </div>
+            <form action="/producto/agregar" method="POST"></form>
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" id="nombre">
                 </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="descripcion">Descripción</label>
+                    <input type="text" name="descripcion" class="form-control" id="descripcion">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="codigoBarras">Código de Barras</label>
+                    <input type="text" name="codigoBarras" class="form-control" id="codigoBarras">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="precioCompra">Precio de Compra</label>
+                    <input type="number" name="precioCompra" class="form-control" id="precioCompra">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="precioVenta">Precio de Venta</label>
+                    <input type="number" name="precioVenta" class="form-control" id="precioVenta">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="existencias">Existencias</label>
+                    <input type="number" name="existencias" class="form-control" id="existencias">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="proveedor">Proveedor</label>
+                    <input type="text" name="proveedor" class="form-control" id="proveedor">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="categoria">Categoría</label>
+                    <input type="text" name="categoria" class="form-control" id="categoria">
+                </div>
+                <div class="col-lg-12 mt-5">
+                 <button class="btn btn-success" type="button" onclick="crearProducto()">Crear</button>
+                </div>
+            </div>
             </form>
         </div>
         <hr>
-            <div class="col-12">
-                <table class="table table-bordered" id="crudTable">
-                    <thead>
+        <div class="col-12">
+            <table class="table table-bordered" id="crudTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Código de Barras</th>
+                        <th>Precio de Compra</th>
+                        <th>Precio de Venta</th>
+                        <th>Existencias</th>
+                        <th>Proveedor</th>
+                        <th>Categoría</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% productos.forEach(producto=> { %>
                         <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Código de barras</th>
-                            <th>Precio de compra</th>
-                            <th>Precio de venta</th>
-                            <th>Existencias</th>
-                            <th>Proveedor</th>
-                            <th>Categoría</th>
-                            <th>Acciones</th>
+                            <td>
+                                <%= producto.id %>
+                            </td>
+                            <td>
+                                <%= producto.nombre %>
+                            </td>
+                            <td>
+                                <%= producto.descripcion %>
+                            </td>
+                            <td>
+                                <%= producto.codigoBarras %>
+                            </td>
+                            <td>
+                                <%= producto.precioCompra %>
+                            </td>
+                            <td>
+                                <%= producto.precioVenta %>
+                            </td>
+                            <td>
+                                <%= producto.existencias %>
+                            </td>
+                            <td>
+                                <%= producto.proveedor %>
+                            </td>
+                            <td>
+                                <%= producto.categoria %>
+                            </td>
+                            <td>
+                                <button class="btn btn-warning"
+                                    onclick="window.location.href='/productos/actualizar/<%= producto.id %>'">Editar</button>
+                                <button class="btn btn-danger"
+                                    onclick="eliminarProducto('<%= producto.id %>')">Eliminar</button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <% products.forEach(product => { %>
-                            <tr>
-                                <td><%= product._id %></td>
-                                <td><%= product.nombre %></td>
-                                <td><%= product.descripcion %></td>
-                                <td><%= product.codigoBarras %></td>
-                                <td><%= product.precioCompra %></td>
-                                <td><%= product.precioVenta %></td>
-                                <td><%= product.existencias %></td>
-                                <td><%= product.proveedor %></td>
-                                <td><%= product.categoria %></td>
-                                <td>
-                                    <button class="btn btn-warning" onclick="window.location.href='editar/<%= product._id %>'">Editar</button>
-                                    <button class="btn btn-danger" onclick="eliminarProducto('<%= product._id %>')">Eliminar</button>
-                                </td>
-                            </tr>
                         <% }); %>
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Script para eliminar productos (puedes adaptarlo según tus necesidades) -->
+    <!-- Script para SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script>
-    function eliminarProducto(id) {
-        // Utiliza SweetAlert para mostrar un mensaje de confirmación
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Una vez eliminado, no podrás recuperar este producto.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminarlo'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Lógica para eliminar producto
-                console.log('Eliminar producto con ID:', id);
+    <script>
+        function eliminarProducto(id) {
+            // Utiliza SweetAlert para mostrar un mensaje de confirmación
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: 'Una vez eliminado, no podrás recuperar este producto.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Lógica para eliminar producto
+                    console.log('Eliminar producto con ID:', id);
 
-                // Otra opción: realizar una solicitud AJAX para eliminar el producto en el servidor
+                    // Otra opción: realizar una solicitud AJAX para eliminar el producto en el servidor
 
-                // Muestra un mensaje de éxito
+                    // Muestra un mensaje de éxito
+                    Swal.fire(
+                        '¡Eliminado!',
+                        'El producto ha sido eliminado.',
+                        'success'
+                    ).then(() => {
+                        // Puedes redirigir o realizar otras acciones después de eliminar el producto
+                        // En este caso, recargar la página
+                        window.location.reload();
+                    });
+                }
+            });
+        }
+
+        function crearProducto() {
+            // Obtén los valores de los campos del formulario
+            const nombre = document.getElementById('nombre').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const codigoBarras = document.getElementById('codigoBarras').value;
+            const precioCompra = document.getElementById('precioCompra').value;
+            const precioVenta = document.getElementById('precioVenta').value;
+            const existencias = document.getElementById('existencias').value;
+            const proveedor = document.getElementById('proveedor').value;
+            const categoria = document.getElementById('categoria').value;
+
+            // Verifica que se ingresen los datos necesarios (puedes agregar más validaciones según tus necesidades)
+            if (!nombre || !descripcion || !codigoBarras || !precioCompra || !precioVenta || !existencias || !proveedor || !categoria) {
+                // Muestra un mensaje de error si faltan datos
                 Swal.fire(
-                    '¡Eliminado!',
-                    'El producto ha sido eliminado.',
-                    'success'
-                ).then(() => {
-                    // Puedes redirigir o realizar otras acciones después de eliminar el producto
-                    // En este caso, recargar la página
-                    window.location.reload();
-                });
+                    'Error',
+                    'Por favor, completa todos los campos.',
+                    'error'
+                );
+                return;
             }
-        });
-    }
-</script>
 
+            // Simulación de una solicitud AJAX (reemplaza esto con tu lógica real)
+            fetch('/producto/agregar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    nombre: nombre,
+                    descripcion: descripcion,
+                    // Agrega aquí los demás campos del producto
+                }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la creación del producto');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Muestra un mensaje de éxito
+                    Swal.fire(
+                        '¡Creado!',
+                        'El producto ha sido creado exitosamente.',
+                        'success'
+                    ).then(() => {
+                        // Puedes redirigir o realizar otras acciones después de crear el producto
+                        // En este caso, recargar la página
+                        window.location.reload();
+                    });
+                })
+                .catch(error => {
+                    // Muestra un mensaje de error
+                    Swal.fire(
+                        'Error',
+                        'Hubo un problema al crear el producto. Inténtalo de nuevo.',
+                        'error'
+                    );
+                    console.error('Error al crear el producto:', error);
+                });
+        }
+    </script>
 </body>
 
 </html>

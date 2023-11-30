@@ -3,9 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const generateUniqueId = require('./generateUniqueId');
-const { Producto, addProduct } = require('../models/producto');
+const Producto = require('../models/producto');
 const dataPath = './data/';
 const filePath = path.join(dataPath, 'productos.json');
+const mongoose = require('mongoose');
+const { ObjectId } = require('mongoose').Types;
 
 // Archivo de datos de productos
 const productosDataFromFile = fs.readFileSync(filePath, 'utf-8');
@@ -95,16 +97,18 @@ exports.addProduct = async (req, res) => {
 exports.editProductPage = async (req, res) => {
   try {
     const productId = req.params.id;
-    const product = await Producto.findById(productId);
 
-    if (!product) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+    // Utiliza el campo 'id' en lugar de '_id'
+    const producto = await Producto.findOne({ id: productId });
+
+    if (!producto) {
+      return res.status(404).send('Producto no encontrado');
     }
 
-    res.render('productos/actualizar', { product });
+    res.render('productos/actualizar', { producto: producto });
   } catch (error) {
     console.error('Error al cargar la página de edición:', error);
-    res.status(500).send('Error interno del servidor');
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -112,9 +116,9 @@ exports.updateProduct = async (req, res) => {
   try {
     const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
 
-    // Encuentra el producto por el campo '_id'
+    // Encuentra el producto por el campo 'id'
     const productoActualizado = await Producto.findOneAndUpdate(
-      { _id: id },
+      { id: id },
       {
         nombre: nombre,
         descripcion: descripcion,
@@ -140,6 +144,7 @@ exports.updateProduct = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error en el servidor al actualizar el producto' });
   }
 };
+
 exports.deleteProduct = async (req, res) => {
   const productId = req.params.id;
 
@@ -160,7 +165,7 @@ exports.deleteProduct = async (req, res) => {
 exports.renderTabla = async (req, res) => {
   try {
     const productos = await Producto.find();
-    res.render('productos/tabla', { products: productos });
+    res.render('productos/tabla', { productos: productos });
   } catch (error) {
     console.error('Error al obtener productos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
