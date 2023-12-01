@@ -33,7 +33,7 @@
             <div class="row">
                 <% if (proveedor) { %>
                     <!-- Formulario para la edición del proveedor -->
-                    <form id="editarForm" action="/actualizar/<%= proveedor._id %>" method="POST">
+                    <form id="editarForm" action="/editar/<%= proveedor._id %>" method="POST">
                         <!-- Campos del formulario -->
                         <div class="form-group col-md-6 mb-3">
                             <label for="nombre">Nombre</label>
@@ -66,9 +66,12 @@
             formData.append('contacto', contacto);
 
             // Enviar la solicitud al servidor
-            fetch('/actualizar/<%= proveedor._id %>', {
+            fetch(`/editar/${id}`, {
                 method: 'POST',
                 body: formData,
+                headers: {
+                            'Content-Type': 'application/json',
+                        },
             })
             .then(response => {
                 if (!response.ok) {

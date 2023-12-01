@@ -6,12 +6,27 @@ require('dotenv').config();
 const path = require('path');
 const router = express.Router();
 const productoController = require('./controllers/productoController');
+const Producto = require('./models/producto');
 
 const app = express();
 
 //Configuracion HTML
 
 router.get('/tabla', productoController.renderTabla);
+
+app.post('/productos/editar/:id', async (req, res) => {
+  const productId = req.params.id;
+  const newData = req.body;
+
+  try {
+      // Aquí está la lógica para actualizar el producto en la base de datos
+      const editarProducto = await Producto.find({ _id: productId }, newData, { new: true });
+      res.json(editarProducto);
+  } catch (error) {
+      console.error('Error al actualizar el producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
 
 //Configuracion HTML
 

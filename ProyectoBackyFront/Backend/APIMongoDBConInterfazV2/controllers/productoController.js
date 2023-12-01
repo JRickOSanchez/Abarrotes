@@ -112,7 +112,25 @@ exports.editProductPage = async (req, res) => {
   }
 };
 
-exports.updateProduct = async (req, res) => {
+exports.editarProducto = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    // Utiliza el campo 'id' en lugar de '_id'
+    const producto = await Producto.findOne({ id: productId });
+
+    if (!producto) {
+      return res.status(404).send('Producto no encontrado');
+    }
+
+    res.render('/editar', { producto: producto });
+  } catch (error) {
+    console.error('Error al cargar la página de edición del producto:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+exports.actualizarProducto = async(req, res) => {
   try {
     const { id, nombre, descripcion, codigoBarras, precioCompra, precioVenta, existencias, proveedor, categoria } = req.body;
 
@@ -138,10 +156,10 @@ exports.updateProduct = async (req, res) => {
     }
 
     // Envía la respuesta con el producto actualizado
-    res.json({ success: true, message: 'Producto actualizado correctamente' });
+    res.redirect('/productos/actualizar');
   } catch (error) {
-    console.error('Error en el controlador de actualización:', error);
-    res.status(500).json({ success: false, message: 'Error en el servidor al actualizar el producto' });
+    console.error('Error en el controlador de actualización del producto:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 

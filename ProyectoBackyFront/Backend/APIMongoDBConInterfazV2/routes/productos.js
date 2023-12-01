@@ -7,7 +7,8 @@ router.get('/producto', productoController.getAllProducts);
 router.post('/agregar', productoController.addProduct);
 router.get('/producto/:id', productoController.getProductById);
 router.delete('/eliminar/:id', productoController.deleteProduct);
-router.post('/actualizar/:id', productoController.updateProduct);
+router.get('/editar/:id', productoController.editarProducto);
+router.post('/editar/:id', productoController.actualizarProducto);
 router.get('/tabla', productoController.renderTabla);
 router.get('/actualizar/:id',productoController.editProductPage);
 
