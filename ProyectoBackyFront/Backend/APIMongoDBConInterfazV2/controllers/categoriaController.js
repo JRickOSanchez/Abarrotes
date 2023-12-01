@@ -62,23 +62,47 @@ exports.getAllCategories = async (req, res) => {
     }
   };
   
-  exports.updateCategory = async (req, res) => {
-    const categoryId = req.params.id;
-  
+  exports.editarCategoria = async (req, res) => {
     try {
-      const { nombre } = req.body;
+      const categoriaId = req.params.id;
   
-      // Buscar y actualizar la categoría por el campo 'id'
+      // Utiliza el campo 'id' en lugar de '_id'
+      const categoria = await Categoria.findOne({ id: categoriaId });
+  
+      if (!categoria) {
+        return res.status(404).send('Categoría no encontrada');
+      }
+  
+      res.render('categorias/editarCategoria', { categoria: categoria });
+    } catch (error) {
+      console.error('Error al cargar la página de edición de la categoría:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
+  
+  exports.actualizarCategoria = async (req, res) => {
+    try {
+      const { id, nombre } = req.body;
+  
+      // Encuentra la categoría por el campo 'id'
       const categoriaActualizada = await Categoria.findOneAndUpdate(
-        { id: categoryId },
-        { nombre },
+        { id: id },
+        {
+          nombre: nombre,
+          // Otros campos de la categoría si es necesario
+        },
         { new: true }
       );
   
-      // Responder con la categoría actualizada
-      res.json(categoriaActualizada);
+      // Verifica si la categoría fue encontrada y actualizada
+      if (!categoriaActualizada) {
+        return res.status(404).json({ error: 'Categoría no encontrada' });
+      }
+  
+      // Envía la respuesta con la categoría actualizada
+      res.redirect('/categorias/actualizar');
     } catch (error) {
-      console.error('Error al actualizar la categoría:', error);
+      console.error('Error en el controlador de actualización de la categoría:', error);
       res.status(500).json({ error: 'Error interno del servidor' });
     }
   };
@@ -102,19 +126,16 @@ exports.getAllCategories = async (req, res) => {
 
   exports.editCategoryPage = async (req, res) => {
     try {
-      const categoryId = req.params.id;
-      const category = await Categoria.findById(categoryId);
-  
-      if (!category) {
-        return res.status(404).json({ error: 'Categoría no encontrada' });
-      }
-  
-      res.render('categorias/editarCategoria', { category });
+        const categoria = await Categoria.findById(req.params.id);
+
+        // Renderizar la vista con la categoría
+        res.render('categorias/editarCategoria', { categoria });
     } catch (error) {
-      console.error('Error al cargar la página de edición de categoría:', error);
-      res.status(500).send('Error interno del servidor');
+        // Manejar el error
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
-  };
+};
   
   exports.renderTablaCategorias = async (req, res) => {
     try {

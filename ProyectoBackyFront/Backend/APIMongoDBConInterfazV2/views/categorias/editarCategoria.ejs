@@ -33,7 +33,7 @@
             <div class="row">
                 <% if (categoria) { %>
                     <!-- Formulario para la edición de la categoría -->
-                    <form id="editarForm" action="/actualizarCategoria/<%= categoria._id %>" method="POST">
+                    <form id="editarForm" action="/categorias/editarCategoria/<%= categoria._id %>" method="POST">
                         <!-- Campos del formulario -->
                         <div class="form-group col-md-6 mb-3">
                             <label for="nombre">Nombre</label>
@@ -44,7 +44,7 @@
                             <input type="text" name="contacto" class="form-control" id="contacto" value="<%= categoria.contacto %>" required>
                         </div>
                         <div class="col-lg-12 mt-5">
-                            <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
+                            <button class="btn btn-success" type="button" onclick="guardarCambios('<%= categoria._id %>')">Guardar Cambios</button>
                         </div>
                     </form>
                 <% } else { %>
@@ -55,8 +55,9 @@
     </div>
 
     <!-- Script para eliminar categorías (puedes adaptarlo según tus necesidades) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
-        function guardarCambios() {
+        function guardarCambios(id) {
             // Obtener los valores del formulario
             const nombre = document.getElementById('nombre').value;
             const contacto = document.getElementById('contacto').value;
@@ -67,7 +68,7 @@
             formData.append('contacto', contacto);
 
             // Enviar la solicitud al servidor
-            fetch('actualizarCategoria/<%= categoria._id %>', {
+            fetch(`/categorias/editar/${id}`, {
                 method: 'POST',
                 body: formData,
             })
@@ -86,7 +87,7 @@
                     confirmButtonText: 'OK',
                 }).then(() => {
                     // Redireccionar a la tabla de categorías
-                    window.location.href = 'categorias/tablacategorias';
+                    window.location.href = '/categorias/tablacategorias';
                 });
             })
             .catch(error => {

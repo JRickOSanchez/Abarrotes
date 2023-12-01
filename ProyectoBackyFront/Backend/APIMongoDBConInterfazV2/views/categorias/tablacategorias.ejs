@@ -36,7 +36,6 @@
                         <input type="text" name="nombre" class="form-control" id="nombre">
                     </div>
                     <div class="col-lg-12 mt-5">
-                        <button class="btn btn-success" type="submit">Crear para crear tabla sin Alert</button>
                         <button class="btn btn-success" type="button" onclick="crearCategoria()">Crear</button>
                     </div>
                 </div>
@@ -62,7 +61,7 @@
                                 <%= categoria.nombre %>
                             </td>
                             <td>
-                                <button class="btn btn-warning" onclick="window.location.href='/editarCategorias/<%= categoria._id %>'">Editar</button>
+                                <a class="btn btn-warning" href="/categorias/editarCategoria/<%= categoria._id %>">Editar</a>
                                 <button class="btn btn-danger" onclick="eliminarCategoria('<%= categoria._id %>')">Eliminar</button>
                             </td>
                         </tr>

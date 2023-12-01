@@ -7,7 +7,7 @@ const path = require('path');
 const router = express.Router();
 const productoController = require('./controllers/productoController');
 const Producto = require('./models/producto');
-
+const Categoria = require('./models/categoria');
 const app = express();
 
 //Configuracion HTML
@@ -20,10 +20,34 @@ app.post('/productos/editar/:id', async (req, res) => {
 
   try {
       // Aquí está la lógica para actualizar el producto en la base de datos
-      const editarProducto = await Producto.find({ _id: productId }, newData, { new: true });
+      const editarProducto = await Producto.find({id: productId }, newData, { new: true });
       res.json(editarProducto);
   } catch (error) {
       console.error('Error al actualizar el producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.post('/categorias/editar/:id', async (req, res) => {
+  const categoryId = req.params.id;
+  const newData = req.body;
+
+  try {
+      // Aquí está la lógica para actualizar la categoría en la base de datos
+      const editarCategoria = await Categoria.findOneAndUpdate(
+        { id: categoryId },
+        newData,
+        { new: true }
+      );
+
+      // Verifica si la categoría fue encontrada y actualizada
+      if (!editarCategoria) {
+        return res.status(404).json({ error: 'Categoría no encontrada' });
+      }
+
+      res.json(editarCategoria);
+  } catch (error) {
+      console.error('Error al actualizar la categoría:', error);
       res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
@@ -64,10 +88,6 @@ db.on('error', (error) => {
 
 db.once('open', () => {
   console.log('Conexión exitosa a la base de datos');
-
-  // Importa el modelo después de que la conexión esté abierta
-  const Producto = require('./models/producto');
-  const Venta = require('./models/venta');
 
   // Middleware para evitar el almacenamiento en caché
   app.use(function (req, res, next) {

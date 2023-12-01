@@ -79,27 +79,51 @@ exports.editProviderPage = async (req, res) => {
   }
 };
 
-// Actualizar un proveedor por ID
-exports.updateProvider = async (req, res) => {
-  const providerId = req.params.id;
-
+exports.editarProveedor = async (req, res) => {
   try {
-    const provider = await Proveedor.findByIdAndUpdate(
-      providerId,
-      { $set: req.body },
-      { new: true }
-    );
+    const proveedorId = req.params.id;
 
-    if (!provider) {
-      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    // Utiliza el campo 'id' en lugar de '_id'
+    const proveedor = await Proveedor.findOne({ id: proveedorId });
+
+    if (!proveedor) {
+      return res.status(404).send('Proveedor no encontrado');
     }
 
-    res.json(provider);
+    res.render('editarProveedor', { proveedor: proveedor });
   } catch (error) {
-    console.error('Error al actualizar el proveedor:', error);
+    console.error('Error al cargar la página de edición del proveedor:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+exports.actualizarProveedor = async (req, res) => {
+  try {
+    const { id, nombre, contacto } = req.body;
+
+    // Encuentra el proveedor por el campo 'id'
+    const proveedorActualizado = await Proveedor.findOneAndUpdate(
+      { id: id },
+      {
+        nombre: nombre,
+        contacto: contacto,
+      },
+      { new: true }
+    );
+
+    // Verifica si el proveedor fue encontrado y actualizado
+    if (!proveedorActualizado) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
+
+    // Envía la respuesta con el proveedor actualizado
+    res.redirect('/proveedores/actualizar');
+  } catch (error) {
+    console.error('Error en el controlador de actualización del proveedor:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
 
 // Eliminar un proveedor por ID
 exports.deleteProvider = async (req, res) => {
