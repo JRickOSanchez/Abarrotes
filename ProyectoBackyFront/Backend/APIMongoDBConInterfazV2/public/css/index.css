@@ -4,13 +4,60 @@
   font-family: "Poppins", sans-serif;
 }
 
-.header {
-  background-color: #4070f4;
-  display: flex;
-  justify-content: space-between;
+.encabezado {
+  display: grid;
+  padding-bottom: 25px;
+  background-color: #006eff;
+  grid-template-columns: auto auto;
   align-items: center;
-  height: 85px;
-  padding: 15px 10%;
+  box-shadow: 5px 1px 10px #004bad;
+  
+}
+
+.elemento_1{
+  color: #ffffff;
+  font-size: 25px;
+  margin-left: 15px;
+  margin-top: 20px;
+}
+
+
+.boton_logout{
+  padding: 5px;
+  text-align: end;
+  margin-top: 15px;
+}
+
+.Bienvenido_usuario{
+  padding-top: 30px;
+  text-align: center;
+}
+
+.botones{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+}
+
+.boton{
+  font-weight: 800;
+  flex: 1 0 45%;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+  background: linear-gradient(to right, #006eff, #000f81);
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 5px 5px 10px #004bad;
+}
+
+.boton:hover{
+  background: linear-gradient(to right, #00459f, #000a54);
 }
 
 .header .nav-links {

@@ -21,22 +21,51 @@
 </head>
 
 <body>
+    <header>
+        <div class="encabezado">
+            <div class="elemento_1">
+                <strong class="Title_WebPage">Abarrotes</strong>
+            </div>
 
-    <header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
+            <div class="boton_logout">
                 <a type="button" class="px-3 btn btn-danger" href="/logout">Logout</a>
             </div>
+
         </div>
     </header>
 
-    <div class="container-fluid">
+    <div class="contenido_principal">
+
+        <div>
+            <h2 class="Bienvenido_usuario">Bienvenido:
+                <% if (user) { %>
+                    <span class="badge bg-success"><%= user.username %></span>
+                <% } %>
+            </h2>
+        </div>
+
+        <div class="botones">
+            <a class="boton" href="/productos/tabla">
+                <span data-feather="file"></span>
+                PRODUCTOS
+            </a>
+            <a class="boton" href="/productos/tabla">
+                <span data-feather="file"></span>
+                 CATEGORIAS
+            </a>
+            <a class="boton" href="/productos/tabla">
+                <span data-feather="file"></span>
+                PROVEEDORES
+            </a>
+            <a class="boton" href="/productos/tabla">
+                <span data-feather="file"></span>
+                VENTAS
+            </a>
+        </div>
+
+    </div>
+
+        <!--
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
                 <div class="position-sticky pt-3">
@@ -73,9 +102,11 @@
                         </li>
                     </ul>
                 </div>
-            </nav>
+            </nav> -->
 
             <!-- Contenido principal   -->
+
+            <!--
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h2>Dashboard</h2>
@@ -83,14 +114,17 @@
                         <% if (user) { %>
                         <span class="badge bg-success"><%= user.username %></span>
                         <% } %>
-                    </h2>
-                </div>
+              Contenido principal   -->
+                   <!--</h2>
+                </div>-->
 
                 <!-- Aquí puedes agregar tu contenido específico -->
                 <!-- Por ejemplo, puedes colocar el formulario y la tabla aquí -->
+            <!--
             </main>
-        </div>
-    </div>
+
+        </div>-->
+    
 
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
         integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
