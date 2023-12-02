@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/index.css" />
+    <title>Proyecto API WEB - Equipo 3</title>
+
+    <style>
+        #sidebarMenu .nav-item:hover {
+            background-color: transparent !important; /* Evitar cambio de color al pasar el mouse */
+        }
+
+        #sidebarMenu .nav-link {
+            color: white !important; /* Color de texto */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="encabezado">
+            <div class="elemento_1">
+                <strong class="Title_WebPage">Abarrotes</strong>
+            </div>
+
+            <div class="boton_logout">
+                <a type="button" class="px-3 btn btn-danger" href="/logout">Logout</a>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="contenido_principal">
+
+        <div>
+            <h2 class="Bienvenido_usuario">Bienvenido:
+                <% if (user) { %>
+                    <span class="badge bg-success"><%= user.username %></span>
+                <% } %>
+            </h2>
+        </div>
+
+        <div class="botones">
+            <a class="boton" href="/productos/tabla">
+                <span data-feather="file"></span>
+                PRODUCTOS
+            </a>
+            <a class="boton" href="categorias/tablacategorias">
+                <span data-feather="file"></span>
+                 CATEGORIAS
+            </a>
+            <a class="boton" href="proveedores/tablaproveedores">
+                <span data-feather="file"></span>
+                PROVEEDORES
+            </a>
+        </div>
+    </div>
+
+        <!--
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#">
+                                <span data-feather="home"></span>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/productos/tabla">
+                                <span data-feather="file"></span>
+                                Productos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="categorias/tablacategorias">
+                                <span data-feather="shopping-cart"></span>
+                                Categorias
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="proveedores/tablaproveedores">
+                                <span data-feather="file"></span>
+                                Proveedores
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="ventas/tablaventas">
+                                <span data-feather="file"></span>
+                                Ventas
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav> -->
+
+            <!-- Contenido principal   -->
+
+            <!--
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h2>Dashboard</h2>
+                    <h2>Bienvenido:
+                        <% if (user) { %>
+                        <span class="badge bg-success"><%= user.username %></span>
+                        <% } %>
+              Contenido principal   -->
+                   <!--</h2>
+                </div>-->
+
+                <!-- Aquí puedes agregar tu contenido específico -->
+                <!-- Por ejemplo, puedes colocar el formulario y la tabla aquí -->
+            <!--
+            </main>
+
+        </div>-->
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+        crossorigin="anonymous"></script>
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>
