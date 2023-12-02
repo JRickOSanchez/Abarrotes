@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.encabezado {
+  display: grid;
+  padding-bottom: 25px;
+  background-color: #006eff;
+  grid-template-columns: auto auto;
+  align-items: center;
+  box-shadow: 5px 1px 10px #004bad;
+  
+}
+
+.elemento_1{
+  color: #ffffff;
+  font-size: 25px;
+  margin-left: 15px;
+  margin-top: 20px;
+}
+
+
+.boton_logout{
+  padding: 5px;
+  text-align: end;
+  margin-top: 15px;
+}
+
+.Bienvenido_usuario{
+  padding-top: 30px;
+  text-align: center;
+}
+
+.botones{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+}
+
+.boton{
+  font-weight: 800;
+  flex: 1 0 45%;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  text-decoration: none;
+  display: inline-block;
+  border: none;
+  background: linear-gradient(to right, #006eff, #000f81);
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 5px 5px 10px #004bad;
+}
+
+.boton:hover{
+  background: linear-gradient(to right, #00459f, #000a54);
+}
+
+.header .nav-links {
+  list-style: none;
+}
+
+.header .nav-links li {
+  display: inline-block;
+  padding: 0 20px;
+}
+
+.header .nav-links li:hover {
+  transform: scale(1.1);
+}
+
+.header .nav-links a {
+  font-size: 700;
+  color: #fff;
+  text-decoration: none;
+}
+
+.header .nav-links li a:hover {
+  color: #181823;
+}
+
+.header .btn button {
+  font-weight: 700;
+  color: #fff;
+  padding: 9px 25px;
+  background: #013f61;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.header .btn button:hover {
+  background-color: #0271af;
+  transform: scale(1.1);
+}
